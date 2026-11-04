@@ -83,6 +83,7 @@ export const CARD_STYLES = `
     display: flex; align-items: center; gap: 12px; padding: 14px 18px 10px;
   }
   .hf-logo { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; flex: none; }
+  .hf-logo-wordmark { width: 120px; max-width: 28vw; height: 32px; border-radius: 0; object-fit: contain; }
   .hf-apptitle { flex: 1; min-width: 0; }
   .hf-apptitle h1 {
     margin: 0; font-size: 1.35em; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;

@@ -71,7 +71,11 @@ const assert = (cond, msg) => {
 await check("EveryPlate: brand heading, supported tabs, and no cookbook or food-profile requests", async () => {
   const page = await open({ brand: "everyplate", view: "recipes" });
   assert((await text(page, ".hf-apptitle h1")) === "EveryPlate", "EveryPlate heading");
-  assert(!(await q(page, ".hf-logo")), "no HelloFresh logo on EveryPlate");
+  await page.waitForFunction(() => {
+    const logo = window.__card.shadowRoot.querySelector(".hf-logo-wordmark");
+    return logo && logo.complete && logo.naturalWidth > 0;
+  });
+  assert(await page.evaluate(() => window.__card.shadowRoot.querySelector(".hf-logo").src.includes("/everyplate-logo.svg?v=")), "bundled, versioned EveryPlate logo");
   assert(!/HelloFresh/.test(await text(page, ".js-banners")), "payment notices use the account brand");
   assert(!(await q(page, '.hf-tab[data-view="recipes"]')), "no standalone recipe catalog");
   assert((await page.evaluate(() => window.__card.view)) === "overview", "unsupported starting section falls back");

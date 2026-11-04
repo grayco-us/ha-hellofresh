@@ -77,6 +77,7 @@ const detailModule = import(moduleUrl("hellofresh-recipe-detail.js"));
 const { esc, t, ht, html } = L;
 const { icon } = UI;
 const LOGO_URL = "/hellofresh/hellofresh-logo.png";
+const EVERYPLATE_LOGO_URL = moduleUrl("everyplate-logo.svg");
 
 // Each section's tab; `label` reads the card's text (views.<key>) when shown.
 export const VIEWS = [
@@ -1267,9 +1268,10 @@ class HelloFreshCard extends HTMLElement {
 
   _renderAppbar() {
     const cfg = this._config;
-    // Do not present the HelloFresh logo as EveryPlate's. A custom logo URL still wins.
-    const defaultLogo = this._summary?.brand === "EveryPlate" ? "" : LOGO_URL;
+    // Pick the account brand by default; an explicit logo URL or false still wins.
+    const defaultLogo = this._summary?.brand === "EveryPlate" ? EVERYPLATE_LOGO_URL : LOGO_URL;
     const logo = cfg.logo === false || cfg.logo === "" ? "" : cfg.logo === true || cfg.logo == null ? defaultLogo : String(cfg.logo);
+    const wordmark = logo === EVERYPLATE_LOGO_URL;
     const title = cfg.title ?? this._summary?.brand ?? "HelloFresh";
     const sub = this._subtitle();
     const menu = this._wantsMenuButton();
@@ -1277,7 +1279,7 @@ class HelloFreshCard extends HTMLElement {
     if (!menu && !logo && !title && cfg.views.length < 2) return "";
     return `
       ${menu ? `<button class="hf-iconbtn hf-menubtn" data-action="sidebar" title="${ht("card.sidebar")}" aria-label="${ht("card.open_sidebar")}">${icon("mdi:menu")}</button>` : ""}
-      ${logo ? `<img class="hf-logo" src="${esc(logo)}" alt="">` : ""}
+      ${logo ? `<img class="hf-logo${wordmark ? " hf-logo-wordmark" : ""}" src="${esc(logo)}" alt="">` : ""}
       <div class="hf-apptitle">${title ? `<h1>${esc(title)}</h1>` : ""}${sub ? `<div class="hf-sub">${esc(sub)}</div>` : ""}</div>
       <div class="hf-appactions">
         <button class="hf-iconbtn${this._loading ? " spin" : ""}" data-action="refresh" title="${ht("common.refresh")}"

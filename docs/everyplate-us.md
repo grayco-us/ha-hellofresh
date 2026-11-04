@@ -29,9 +29,9 @@ existing supported HelloFresh markets.
 ## Names and appearance
 
 EveryPlate accounts use **EveryPlate** for the device manufacturer, sidebar label, and automatic
-card heading. The card uses the Home Assistant theme accent and omits the HelloFresh logo for
-EveryPlate. A card's explicitly configured `title` and custom `logo` URL still apply. No
-EveryPlate logo asset is bundled.
+card heading. The card uses the Home Assistant theme accent and a bundled EveryPlate SVG
+wordmark, supplied by the contributor. The wordmark keeps its original proportions. A card's
+explicitly configured `title` and custom `logo` URL still apply; `logo: false` hides the logo.
 
 The integration remains under the `hellofresh` domain, with `hellofresh.*` actions,
 `custom:hellofresh-card`, and the existing sidebar URL. Its HACS listing and integration-level
