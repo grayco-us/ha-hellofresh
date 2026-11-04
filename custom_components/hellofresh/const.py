@@ -245,6 +245,7 @@ COUNTRY_BASE_URLS: dict[str, str] = {
     "dk": "https://www.hellofresh.dk",
     "no": "https://www.hellofresh.no",
     "se": "https://www.hellofresh.se",
+    "everyplate_us": "https://www.everyplate.com",
 }
 
 # Countries where HelloFresh runs its own last-mile delivery fleet AND the Tracey live
@@ -271,6 +272,7 @@ TRACEY_COUNTRIES = frozenset(TRACEY_SITES)
 # the US. Map each config key to the API country code; unlisted keys upper-case as-is.
 COUNTRY_API_CODES: dict[str, str] = {
     "uk": "GB",
+    "everyplate_us": "ER",
 }
 
 # Default API locale per config key. The frontends use the native locale (e.g. `de-DE`).
@@ -296,6 +298,7 @@ COUNTRY_API_LOCALES: dict[str, str] = {
     "dk": "da-DK",
     "no": "nb-NO",
     "se": "sv-SE",
+    "everyplate_us": "en-US",
 }
 
 
