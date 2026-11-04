@@ -74,6 +74,7 @@ def _option_image_url(ingredient: dict[str, Any]) -> str | None:
 # CHF, not EUR.
 _COUNTRY_CURRENCIES = {
     "us": "USD",
+    "everyplate_us": "USD",
     "ca": "CAD",
     "uk": "GBP",
     "au": "AUD",

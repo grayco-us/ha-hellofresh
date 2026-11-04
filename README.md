@@ -206,13 +206,14 @@ The available options are:
 
 ### Supported regions
 
-Choose the matching country during setup. All 16 markets HelloFresh currently operates in are supported. Prices are reported in each region's local currency, taken from your account data where HelloFresh provides it and falling back to the currency listed below.
+Choose the matching brand and country during setup. All 16 markets HelloFresh currently operates in are supported, alongside [EveryPlate US](docs/everyplate-us.md). Prices are reported in each region's local currency, taken from your account data where HelloFresh provides it and falling back to the currency listed below.
 
 **Status** reflects real-world testing: ✅ = verified end to end (including write actions); *Untested* = the region is wired up and should work for reading, but no one has confirmed it — reports welcome.
 
 | Region | Code | Website | Currency | Status |
 | --- | --- | --- | --- | --- |
 | United States | `us` | https://www.hellofresh.com | USD | ✅ Verified |
+| EveryPlate United States | `everyplate_us` | https://www.everyplate.com | USD | User-confirmed core flows; [limitations](docs/everyplate-us.md) |
 | United Kingdom | `uk` | https://www.hellofresh.co.uk | GBP | ✅ Verified |
 | Canada | `ca` | https://www.hellofresh.ca | CAD | Untested |
 | Australia | `au` | https://www.hellofresh.com.au | AUD | Untested |

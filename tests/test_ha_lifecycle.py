@@ -117,12 +117,12 @@ def _no_deprecations(caplog: pytest.LogCaptureFixture):
     assert not reports, "\n".join(reports)
 
 
-async def _load(hass: HomeAssistant) -> MockConfigEntry:
+async def _load(hass: HomeAssistant, country: str = "us") -> MockConfigEntry:
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="HelloFresh (US)",
-        unique_id="us::acct-1",
-        data={"country": "us", "username": "cook@example.com", "password": "made-up"},
+        title="EveryPlate (US)" if country == "everyplate_us" else "HelloFresh (US)",
+        unique_id=f"{country}::acct-1",
+        data={"country": country, "username": "cook@example.com", "password": "made-up"},
     )
     entry.add_to_hass(hass)
     await hass.config_entries.async_setup(entry.entry_id)
@@ -244,3 +244,24 @@ async def test_reauth_brings_back_an_entry_whose_setup_failed(
 
     assert result["reason"] == "reauth_successful"
     assert entry.state is ConfigEntryState.LOADED
+
+
+async def test_everyplate_account_loads_with_brand_and_feature_contract(
+    hass: HomeAssistant,
+) -> None:
+    entry = await _load(hass, "everyplate_us")
+    assert entry.state is ConfigEntryState.LOADED
+    summary = await hass.services.async_call(
+        DOMAIN, "get_account_summary", {}, blocking=True, return_response=True
+    )
+    assert summary["brand"] == "EveryPlate"
+    assert summary["features"] == {
+        "recipe_catalog": False,
+        "favorites": False,
+        "food_profile": False,
+    }
+    device = dr.async_entries_for_config_entry(dr.async_get(hass), entry.entry_id)[0]
+    assert device.manufacturer == "EveryPlate"
+    assert hass.data[DATA_PANELS]["hellofresh-app"].sidebar_title == "EveryPlate"
+    await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()

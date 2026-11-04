@@ -26,9 +26,9 @@ export function pill(text, tone = "muted", iconName = null, title = "") {
 }
 
 // The week's state as a coloured pill ("Editable", "Preselected", "On the way", …).
-export function statePill(week, state = L.weekState(week)) {
+export function statePill(week, state = L.weekState(week), brandParams) {
   const meta = L.STATE_META[state];
-  const title = L.stateKey(week, state) === "preselected" ? t("state.preselected.hint") : "";
+  const title = L.stateKey(week, state) === "preselected" ? t("state.preselected.hint", brandParams) : "";
   return pill(L.stateLabel(week, state), meta.tone, meta.icon, title);
 }
 

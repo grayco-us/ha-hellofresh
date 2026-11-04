@@ -917,7 +917,7 @@
         "account": "Konto"
       },
       "card": {
-        "sections": "HelloFresh-avsnitt",
+        "sections": "{brand}-avsnitt",
         "sidebar": "Sidofält",
         "open_sidebar": "Öppna sidofältet",
         "plan_size": {
@@ -937,10 +937,10 @@
       "banner": {
         "refresh_failed": "Det gick inte att uppdatera: {error}",
         "payment_card": "betalkort",
-        "card_expired": "Ditt kort, {card}, har gått ut. Uppdatera det hos HelloFresh, annars kanske nästa matkasse inte skickas.",
-        "card_expired_date": "Ditt kort, {card}, har gått ut ({date}). Uppdatera det hos HelloFresh, annars kanske nästa matkasse inte skickas.",
-        "card_expiring": "Ditt kort, {card}, går snart ut. Uppdatera det hos HelloFresh innan nästa matkasse debiteras.",
-        "card_expiring_date": "Ditt kort, {card}, går snart ut ({date}). Uppdatera det hos HelloFresh innan nästa matkasse debiteras.",
+        "card_expired": "Ditt kort, {card}, har gått ut. Uppdatera det hos {brand}, annars kanske nästa matkasse inte skickas.",
+        "card_expired_date": "Ditt kort, {card}, har gått ut ({date}). Uppdatera det hos {brand}, annars kanske nästa matkasse inte skickas.",
+        "card_expiring": "Ditt kort, {card}, går snart ut. Uppdatera det hos {brand} innan nästa matkasse debiteras.",
+        "card_expiring_date": "Ditt kort, {card}, går snart ut ({date}). Uppdatera det hos {brand} innan nästa matkasse debiteras.",
         "holiday_date": "Nytt leveransdatum: {date}."
       },
       "state": {
@@ -955,7 +955,7 @@
         "preselected": {
           "label": "Förvald",
           "short": "Förvald",
-          "hint": "HelloFresh har valt de här rätterna åt dig — gå igenom och justera före valfristen."
+          "hint": "{brand} har valt de här rätterna åt dig — gå igenom och justera före valfristen."
         },
         "shipping": {
           "label": "På väg",
@@ -1023,7 +1023,7 @@
         "holiday_change": "Ändrad leverans på grund av helgdag",
         "holiday_schedule": "Helgdagsschema",
         "make_changes_by": "Gör ändringar senast {date}",
-        "autopicked_title": "HelloFresh har valt de här rätterna åt dig.",
+        "autopicked_title": "{brand} har valt de här rätterna åt dig.",
         "unskip_this_week": "Återaktivera den här veckan",
         "review": "Gå igenom",
         "edit": "Ändra",
@@ -1034,7 +1034,7 @@
         "nothing_ships": "Inget skickas den här veckan.",
         "edit_by": "Ändra senast {date}",
         "no_box": "Ingen matkasse den här veckan",
-        "review_picks": "Gå igenom HelloFreshs val",
+        "review_picks": "Gå igenom {brand}s val",
         "pick_n_meals": {
           "one": "Välj {count} rätt",
           "other": "Välj {count} rätter"
@@ -1044,7 +1044,7 @@
         "next": "Nästa",
         "earlier_weeks": "Tidigare veckor",
         "later_weeks": "Senare veckor",
-        "preselected_title": "HelloFresh har valt rätterna för den här veckan.",
+        "preselected_title": "{brand} har valt rätterna för den här veckan.",
         "pantry": "Inköpslista",
         "unskip_week": "Återaktivera vecka",
         "skipped_title": "Den här veckan är överhoppad.",
@@ -1125,7 +1125,7 @@
         "delivery_calendar": "Leveranskalender",
         "coming_up": "Kommande",
         "subscription_inactive": "Ditt abonnemang är {status} — inga matkassar är planerade.",
-        "no_later_weeks": "HelloFresh har inte publicerat senare veckor ännu.",
+        "no_later_weeks": "{brand} har inte publicerat senare veckor ännu.",
         "recent_deliveries": "Senaste leveranserna",
         "history_weeks": {
           "one": "{count} veckas historik",
@@ -1339,7 +1339,7 @@
         "save_failed": "Det gick inte att spara din matkasse: {error}",
         "saved": "Din matkasse är sparad.",
         "unsaved_changes": "Osparade ändringar",
-        "downsized_title": "HelloFresh har gjort matkassen mindre så att den passar ditt abonnemang.",
+        "downsized_title": "{brand} har gjort matkassen mindre så att den passar ditt abonnemang.",
         "downsized_body": "Färre varor än du valde sparades — kontrollera den sparade matkassen nedan.",
         "kind_label": "Rätter eller extra",
         "meals": "Rätter",
@@ -1348,7 +1348,7 @@
         "selected_of_required": "{selected} av {required} rätter",
         "deadline_passed": "Valfristen har passerat — de här ändringarna kan inte sparas",
         "min_note": "Välj minst {min} rätter för att spara",
-        "resized_note": "Matkassen är ändrad till {selected} rätter den här veckan (abonnemang: {required}) — HelloFresh räknar om priset",
+        "resized_note": "Matkassen är ändrad till {selected} rätter den här veckan (abonnemang: {required}) — {brand} räknar om priset",
         "saved_note": "Sparad · kan ändras fram till valfristen",
         "estimated_total": "Beräknad summa",
         "updating_price": "Uppdaterar priset …",
@@ -1364,9 +1364,9 @@
         "extras_change": "Extra (den här ändringen)",
         "updating": "Uppdaterar …",
         "price": "Pris",
-        "estimate_note": "En uppskattning — HelloFresh räknar ut det slutliga priset när matkassen debiteras.",
-        "min_notice": "Välj minst {min} rätter — HelloFresh har ingen mindre matkasse.",
-        "resized_notice": "Veckans matkasse är ändrad till {meals} (ditt abonnemang har {required}). HelloFresh räknar om priset; själva abonnemanget ändras inte.",
+        "estimate_note": "En uppskattning — {brand} räknar ut det slutliga priset när matkassen debiteras.",
+        "min_notice": "Välj minst {min} rätter — {brand} har ingen mindre matkasse.",
+        "resized_notice": "Veckans matkasse är ändrad till {meals} (ditt abonnemang har {required}). {brand} räknar om priset; själva abonnemanget ändras inte.",
         "unsaved_lower": "osparade ändringar",
         "keep_editing": "Fortsätt ändra"
       },
@@ -1493,7 +1493,7 @@
         "presets_loading": "Laddar måltidsprofiler …",
         "presets_none": "Inga måltidsprofiler tillgängliga.",
         "yours": "Din",
-        "presets_note": "Vad varje profil betyder — HelloFresh använder din för att välja rätter. Du ändrar den hos HelloFresh."
+        "presets_note": "Vad varje profil betyder — {brand} använder din för att välja rätter. Du ändrar den hos {brand}."
       },
       "plan": {
         "options_loading": "Alternativen laddas strax …",
@@ -1540,8 +1540,8 @@
         "payload_ok": "Som väntat",
         "no_sensors": "Statussensorerna är inte tillgängliga.",
         "card_updated": "Kortet uppdaterat {time}",
-        "refresh": "Uppdatera från HelloFresh",
-        "refreshed": "Uppdaterat från HelloFresh.",
+        "refresh": "Uppdatera från {brand}",
+        "refreshed": "Uppdaterat från {brand}.",
         "refresh_failed": "Uppdateringen misslyckades: {error}"
       },
       "spending": {
@@ -1557,8 +1557,8 @@
         "monthly": "Kostnad per månad",
         "peak": "Högst {price}",
         "chart_label": {
-          "one": "Månatlig HelloFresh-kostnad den senaste månaden",
-          "other": "Månatlig HelloFresh-kostnad de senaste {count} månaderna"
+          "one": "Månatlig {brand}-kostnad den senaste månaden",
+          "other": "Månatlig {brand}-kostnad de senaste {count} månaderna"
         },
         "by_month": "Per månad",
         "recent_boxes": "Senaste matkassarna",

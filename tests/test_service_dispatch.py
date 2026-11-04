@@ -200,3 +200,25 @@ def test_registration_is_idempotent() -> None:
 
     assert first.keys() == second.keys()
     assert len(second) == len(first)
+
+
+@pytest.mark.parametrize(
+    "service,payload",
+    [
+        ("get_food_profile", {}),
+        ("set_food_profile", {"taste": {}}),
+        ("get_favorites", {}),
+        ("add_favorite", {"recipe_id": "made-up"}),
+        ("remove_favorite", {"recipe_id": "made-up"}),
+        ("get_recipe_collections", {}),
+        ("get_catalog_recipes", {}),
+    ],
+)
+def test_everyplate_rejects_unsupported_services_before_accessing_client(service, payload) -> None:
+    ep = _coordinator("ep")
+    ep.config_entry.data = {"country": "everyplate_us"}
+    # No client is provided: reaching it would fail rather than silently make a request.
+    hass = _hass({"ep": ep, "hf": _coordinator("hf")})
+    handlers = _register(hass)
+    with pytest.raises(HomeAssistantError, match="EveryPlate does not support"):
+        _call(handlers[service], {ATTR_CONFIG_ENTRY_ID: "ep", **payload}, hass)

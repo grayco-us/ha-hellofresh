@@ -16,7 +16,7 @@ import re
 import pytest
 import yaml
 
-from custom_components.hellofresh.const import COUNTRY_API_CODES, COUNTRY_BASE_URLS
+from custom_components.hellofresh.const import COUNTRY_BASE_URLS, iso_country_code
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 COMPONENT = REPO / "custom_components" / "hellofresh"
@@ -48,10 +48,10 @@ def test_hacs_country_list_matches_supported_countries() -> None:
     even though the integration works for them. It drifted to 6 of 16 once already.
 
     HACS expects ISO 3166-1 alpha-2, which is NOT always the config key: the UK is configured as
-    ``uk`` but its ISO/API code is ``GB``, so the mapping in COUNTRY_API_CODES has to be applied
-    rather than upper-casing the key.
+    ``uk`` but its ISO code is ``GB``. EveryPlate US shares ``US`` with HelloFresh US,
+    even though its API business unit is ``ER``. Never advertise ER as a country.
     """
-    expected = {(COUNTRY_API_CODES.get(key) or key.upper()) for key in COUNTRY_BASE_URLS}
+    expected = {iso_country_code(key) for key in COUNTRY_BASE_URLS}
     declared = set(_load(REPO / "hacs.json")["country"])
 
     assert declared == expected, (

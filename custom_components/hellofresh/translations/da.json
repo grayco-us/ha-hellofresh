@@ -917,7 +917,7 @@
         "account": "Konto"
       },
       "card": {
-        "sections": "HelloFresh-sektioner",
+        "sections": "{brand}-sektioner",
         "sidebar": "Sidebjælke",
         "open_sidebar": "Åbn sidebjælken",
         "plan_size": {
@@ -937,10 +937,10 @@
       "banner": {
         "refresh_failed": "Kunne ikke opdatere: {error}",
         "payment_card": "betalingskort",
-        "card_expired": "Dit kort, {card}, er udløbet. Opdatér det hos HelloFresh, ellers bliver din næste kasse måske ikke sendt.",
-        "card_expired_date": "Dit kort, {card}, er udløbet ({date}). Opdatér det hos HelloFresh, ellers bliver din næste kasse måske ikke sendt.",
-        "card_expiring": "Dit kort, {card}, udløber snart. Opdatér det hos HelloFresh, før din næste kasse bliver trukket.",
-        "card_expiring_date": "Dit kort, {card}, udløber snart ({date}). Opdatér det hos HelloFresh, før din næste kasse bliver trukket.",
+        "card_expired": "Dit kort, {card}, er udløbet. Opdatér det hos {brand}, ellers bliver din næste kasse måske ikke sendt.",
+        "card_expired_date": "Dit kort, {card}, er udløbet ({date}). Opdatér det hos {brand}, ellers bliver din næste kasse måske ikke sendt.",
+        "card_expiring": "Dit kort, {card}, udløber snart. Opdatér det hos {brand}, før din næste kasse bliver trukket.",
+        "card_expiring_date": "Dit kort, {card}, udløber snart ({date}). Opdatér det hos {brand}, før din næste kasse bliver trukket.",
         "holiday_date": "Ny leveringsdato: {date}."
       },
       "state": {
@@ -955,7 +955,7 @@
         "preselected": {
           "label": "Forudvalgt",
           "short": "Forudvalgt",
-          "hint": "HelloFresh har valgt disse retter for dig — se dem igennem, og ret til før fristen."
+          "hint": "{brand} har valgt disse retter for dig — se dem igennem, og ret til før fristen."
         },
         "shipping": {
           "label": "På vej",
@@ -1023,7 +1023,7 @@
         "holiday_change": "Ændret levering på grund af helligdag",
         "holiday_schedule": "Helligdagsplan",
         "make_changes_by": "Foretag ændringer senest {date}",
-        "autopicked_title": "HelloFresh har valgt disse retter for dig.",
+        "autopicked_title": "{brand} har valgt disse retter for dig.",
         "unskip_this_week": "Bestil kasse denne uge",
         "review": "Se igennem",
         "edit": "Redigér",
@@ -1034,7 +1034,7 @@
         "nothing_ships": "Intet bliver sendt denne uge.",
         "edit_by": "Redigér senest {date}",
         "no_box": "Ingen kasse denne uge",
-        "review_picks": "Se HelloFreshs valg igennem",
+        "review_picks": "Se {brand}s valg igennem",
         "pick_n_meals": {
           "one": "Vælg {count} ret",
           "other": "Vælg {count} retter"
@@ -1044,7 +1044,7 @@
         "next": "Næste",
         "earlier_weeks": "Tidligere uger",
         "later_weeks": "Senere uger",
-        "preselected_title": "HelloFresh har valgt retterne for denne uge.",
+        "preselected_title": "{brand} har valgt retterne for denne uge.",
         "pantry": "Indkøbsliste",
         "unskip_week": "Bestil uge igen",
         "skipped_title": "Denne uge er sprunget over.",
@@ -1125,7 +1125,7 @@
         "delivery_calendar": "Leveringskalender",
         "coming_up": "Kommende",
         "subscription_inactive": "Dit abonnement er {status} — der er ingen planlagte kasser.",
-        "no_later_weeks": "HelloFresh har endnu ikke offentliggjort senere uger.",
+        "no_later_weeks": "{brand} har endnu ikke offentliggjort senere uger.",
         "recent_deliveries": "Seneste leveringer",
         "history_weeks": {
           "one": "{count} uges historik",
@@ -1339,7 +1339,7 @@
         "save_failed": "Kunne ikke gemme din kasse: {error}",
         "saved": "Din kasse er gemt.",
         "unsaved_changes": "Ændringer, der ikke er gemt",
-        "downsized_title": "HelloFresh har gjort denne kasse mindre, så den passer til dit abonnement.",
+        "downsized_title": "{brand} har gjort denne kasse mindre, så den passer til dit abonnement.",
         "downsized_body": "Der blev gemt færre varer, end du valgte — tjek den gemte kasse nedenfor.",
         "kind_label": "Retter eller ekstra",
         "meals": "Retter",
@@ -1348,7 +1348,7 @@
         "selected_of_required": "{selected} af {required} retter",
         "deadline_passed": "Fristen er overskredet — disse ændringer kan ikke gemmes",
         "min_note": "Vælg mindst {min} retter for at gemme",
-        "resized_note": "Kassen er ændret til {selected} retter denne uge (abonnement: {required}) — HelloFresh beregner en ny pris",
+        "resized_note": "Kassen er ændret til {selected} retter denne uge (abonnement: {required}) — {brand} beregner en ny pris",
         "saved_note": "Gemt · kan ændres indtil fristen",
         "estimated_total": "Anslået i alt",
         "updating_price": "Opdaterer prisen …",
@@ -1364,9 +1364,9 @@
         "extras_change": "Ekstra (denne ændring)",
         "updating": "Opdaterer …",
         "price": "Pris",
-        "estimate_note": "Et skøn — HelloFresh beregner den endelige pris, når kassen trækkes.",
-        "min_notice": "Vælg mindst {min} retter — HelloFresh har ingen mindre kasse.",
-        "resized_notice": "Denne uges kasse er ændret til {meals} (dit abonnement har {required}). HelloFresh beregner en ny pris; selve abonnementet ændres ikke.",
+        "estimate_note": "Et skøn — {brand} beregner den endelige pris, når kassen trækkes.",
+        "min_notice": "Vælg mindst {min} retter — {brand} har ingen mindre kasse.",
+        "resized_notice": "Denne uges kasse er ændret til {meals} (dit abonnement har {required}). {brand} beregner en ny pris; selve abonnementet ændres ikke.",
         "unsaved_lower": "ændringer, der ikke er gemt",
         "keep_editing": "Fortsæt med at redigere"
       },
@@ -1493,7 +1493,7 @@
         "presets_loading": "Indlæser måltidsprofiler …",
         "presets_none": "Ingen måltidsprofiler tilgængelige.",
         "yours": "Din",
-        "presets_note": "Hvad hver profil betyder — HelloFresh bruger din til at vælge retter. Du ændrer den hos HelloFresh."
+        "presets_note": "Hvad hver profil betyder — {brand} bruger din til at vælge retter. Du ændrer den hos {brand}."
       },
       "plan": {
         "options_loading": "Valgmulighederne indlæses om lidt …",
@@ -1540,8 +1540,8 @@
         "payload_ok": "Som forventet",
         "no_sensors": "Statussensorerne er ikke tilgængelige.",
         "card_updated": "Kortet opdateret {time}",
-        "refresh": "Opdatér fra HelloFresh",
-        "refreshed": "Opdateret fra HelloFresh.",
+        "refresh": "Opdatér fra {brand}",
+        "refreshed": "Opdateret fra {brand}.",
         "refresh_failed": "Opdatering mislykkedes: {error}"
       },
       "spending": {
@@ -1557,8 +1557,8 @@
         "monthly": "Kasseudgift pr. måned",
         "peak": "Højest {price}",
         "chart_label": {
-          "one": "Månedlig HelloFresh-udgift den seneste måned",
-          "other": "Månedlig HelloFresh-udgift de seneste {count} måneder"
+          "one": "Månedlig {brand}-udgift den seneste måned",
+          "other": "Månedlig {brand}-udgift de seneste {count} måneder"
         },
         "by_month": "Pr. måned",
         "recent_boxes": "Seneste kasser",

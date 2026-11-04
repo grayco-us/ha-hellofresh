@@ -5,6 +5,12 @@ Notable changes for each tagged release. Versions correspond to git tags and to 
 **Unreleased** as part of each change; the release workflow rotates that section into a
 version heading and publishes it as the release's Highlights.
 
+## Unreleased
+- **EveryPlate US accounts** can use the shared integration with their own sign-in site,
+  API business unit and USD fallback. Setup, devices, sidebar and card headings identify
+  EveryPlate. The card omits its unsupported standalone Recipes/cookbook and food-preference
+  controls, while keeping recipe details from meals. HelloFresh accounts keep those features.
+
 ## 4.25 — 2026-11-03
 - **A late or lost box no longer shows as delivered.** Once its delivery day had passed, the
   card called a box delivered by its date alone, even while the carrier had it delayed in

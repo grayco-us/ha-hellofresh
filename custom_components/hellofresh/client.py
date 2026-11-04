@@ -21,6 +21,7 @@ from .const import (
     DEFAULT_COUNTRY,
     DEFAULT_LOG_AUTH_DIAGNOSTICS,
     RECIPE_IMAGE_BASE,
+    account_features,
     api_country_code,
     api_locale,
 )
@@ -194,8 +195,8 @@ class HelloFreshClient(FavoritesClientMixin, PricingClientMixin, HelloFreshPaylo
         self._shared_get_tasks: dict[tuple[str, tuple[tuple[str, Any], ...]], asyncio.Task] = {}
         self._enable_public_menu_fallback = enable_public_menu_fallback
         # Whether each poll spends one extra batched request resolving cookbook bookmark state
-        # for the menu's recipes. The favorite add/remove services work regardless.
-        self._enable_favorites = enable_favorites
+        # for the menu's recipes. EveryPlate has no cookbook, regardless of the option.
+        self._enable_favorites = enable_favorites and account_features(country)["favorites"]
         self._last_account_data: HelloFreshAccountData | None = None
         self._debug_trace: dict[str, list[dict[str, Any]]] = {}
         # Remembers which probed endpoint last produced a usable payload, keyed by
@@ -1176,7 +1177,7 @@ class HelloFreshClient(FavoritesClientMixin, PricingClientMixin, HelloFreshPaylo
         )
         if detail is None:
             raise HelloFreshError(f"HelloFresh returned an unreadable recipe payload for {bare}")
-        if include_favorite:
+        if include_favorite and account_features(self._country)["favorites"]:
             # Best-effort: the heart is decoration on top of the recipe, so a cookbook outage
             # leaves it unknown rather than failing the whole lookup.
             found, answered = await self._async_search_favorites([bare])

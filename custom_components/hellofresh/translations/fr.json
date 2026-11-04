@@ -917,7 +917,7 @@
         "account": "Compte"
       },
       "card": {
-        "sections": "Sections HelloFresh",
+        "sections": "Sections {brand}",
         "sidebar": "Barre latérale",
         "open_sidebar": "Ouvrir la barre latérale",
         "plan_size": {
@@ -937,10 +937,10 @@
       "banner": {
         "refresh_failed": "Échec de l'actualisation : {error}",
         "payment_card": "carte de paiement",
-        "card_expired": "Votre carte ({card}) a expiré. Mettez-la à jour chez HelloFresh, sinon votre prochaine box risque de ne pas être expédiée.",
-        "card_expired_date": "Votre carte ({card}) a expiré ({date}). Mettez-la à jour chez HelloFresh, sinon votre prochaine box risque de ne pas être expédiée.",
-        "card_expiring": "Votre carte ({card}) expire bientôt. Mettez-la à jour chez HelloFresh avant le prélèvement de votre prochaine box.",
-        "card_expiring_date": "Votre carte ({card}) expire bientôt ({date}). Mettez-la à jour chez HelloFresh avant le prélèvement de votre prochaine box.",
+        "card_expired": "Votre carte ({card}) a expiré. Mettez-la à jour chez {brand}, sinon votre prochaine box risque de ne pas être expédiée.",
+        "card_expired_date": "Votre carte ({card}) a expiré ({date}). Mettez-la à jour chez {brand}, sinon votre prochaine box risque de ne pas être expédiée.",
+        "card_expiring": "Votre carte ({card}) expire bientôt. Mettez-la à jour chez {brand} avant le prélèvement de votre prochaine box.",
+        "card_expiring_date": "Votre carte ({card}) expire bientôt ({date}). Mettez-la à jour chez {brand} avant le prélèvement de votre prochaine box.",
         "holiday_date": "Nouvelle date de livraison : {date}."
       },
       "state": {
@@ -955,7 +955,7 @@
         "preselected": {
           "label": "Présélectionnée",
           "short": "Présélectionnée",
-          "hint": "HelloFresh a choisi ces repas pour vous — vérifiez-les et ajustez-les avant la date limite."
+          "hint": "{brand} a choisi ces repas pour vous — vérifiez-les et ajustez-les avant la date limite."
         },
         "shipping": {
           "label": "En route",
@@ -1023,7 +1023,7 @@
         "holiday_change": "Livraison modifiée en raison d'un jour férié",
         "holiday_schedule": "Calendrier des jours fériés",
         "make_changes_by": "Modifications jusqu'au {date}",
-        "autopicked_title": "HelloFresh a choisi ces repas pour vous.",
+        "autopicked_title": "{brand} a choisi ces repas pour vous.",
         "unskip_this_week": "Réactiver cette semaine",
         "review": "Vérifier",
         "edit": "Modifier",
@@ -1034,7 +1034,7 @@
         "nothing_ships": "Aucune livraison cette semaine.",
         "edit_by": "Modifiable jusqu'au {date}",
         "no_box": "Pas de box cette semaine",
-        "review_picks": "Vérifier les choix de HelloFresh",
+        "review_picks": "Vérifier les choix de {brand}",
         "pick_n_meals": {
           "one": "Choisir {count} repas",
           "other": "Choisir {count} repas"
@@ -1044,7 +1044,7 @@
         "next": "Prochaine",
         "earlier_weeks": "Semaines précédentes",
         "later_weeks": "Semaines suivantes",
-        "preselected_title": "HelloFresh a choisi les repas de cette semaine.",
+        "preselected_title": "{brand} a choisi les repas de cette semaine.",
         "pantry": "Liste de courses",
         "unskip_week": "Réactiver la semaine",
         "skipped_title": "Cette semaine est en pause.",
@@ -1125,7 +1125,7 @@
         "delivery_calendar": "Calendrier des livraisons",
         "coming_up": "À venir",
         "subscription_inactive": "Votre abonnement est {status} — aucune box n'est prévue.",
-        "no_later_weeks": "HelloFresh n'a pas encore publié les semaines suivantes.",
+        "no_later_weeks": "{brand} n'a pas encore publié les semaines suivantes.",
         "recent_deliveries": "Livraisons récentes",
         "history_weeks": {
           "one": "{count} semaine d'historique",
@@ -1339,7 +1339,7 @@
         "save_failed": "Impossible d'enregistrer votre box : {error}",
         "saved": "Votre box est enregistrée.",
         "unsaved_changes": "Modifications non enregistrées",
-        "downsized_title": "HelloFresh a réduit cette box pour l'adapter à votre formule.",
+        "downsized_title": "{brand} a réduit cette box pour l'adapter à votre formule.",
         "downsized_body": "Moins d'articles ont été enregistrés que vous n'en aviez choisi — vérifiez la box enregistrée ci-dessous.",
         "kind_label": "Repas ou extras",
         "meals": "Repas",
@@ -1348,7 +1348,7 @@
         "selected_of_required": "{selected} repas sur {required}",
         "deadline_passed": "La date limite est passée — ces modifications ne peuvent pas être enregistrées",
         "min_note": "Choisissez au moins {min} repas pour enregistrer",
-        "resized_note": "Box ramenée à {selected} repas cette semaine (formule : {required}) — HelloFresh recalcule le prix",
+        "resized_note": "Box ramenée à {selected} repas cette semaine (formule : {required}) — {brand} recalcule le prix",
         "saved_note": "Enregistrée · modifiable jusqu'à la date limite",
         "estimated_total": "Total estimé",
         "updating_price": "Mise à jour du prix…",
@@ -1364,9 +1364,9 @@
         "extras_change": "Extras (cette modification)",
         "updating": "Mise à jour…",
         "price": "Prix",
-        "estimate_note": "Une estimation — HelloFresh calcule le prix final lors du prélèvement de la box.",
-        "min_notice": "Choisissez au moins {min} repas — HelloFresh ne propose pas de box plus petite.",
-        "resized_notice": "La box de cette semaine passe à {meals} (votre formule en compte {required}). HelloFresh recalcule le prix ; votre formule elle-même ne change pas.",
+        "estimate_note": "Une estimation — {brand} calcule le prix final lors du prélèvement de la box.",
+        "min_notice": "Choisissez au moins {min} repas — {brand} ne propose pas de box plus petite.",
+        "resized_notice": "La box de cette semaine passe à {meals} (votre formule en compte {required}). {brand} recalcule le prix ; votre formule elle-même ne change pas.",
         "unsaved_lower": "modifications non enregistrées",
         "keep_editing": "Continuer à modifier"
       },
@@ -1493,7 +1493,7 @@
         "presets_loading": "Chargement des préférences de menu…",
         "presets_none": "Aucune préférence de menu disponible.",
         "yours": "La vôtre",
-        "presets_note": "Ce que signifie chaque préférence — HelloFresh utilise la vôtre pour choisir vos repas. Vous pouvez la modifier chez HelloFresh."
+        "presets_note": "Ce que signifie chaque préférence — {brand} utilise la vôtre pour choisir vos repas. Vous pouvez la modifier chez {brand}."
       },
       "plan": {
         "options_loading": "Chargement des options…",
@@ -1540,8 +1540,8 @@
         "payload_ok": "Comme prévu",
         "no_sensors": "Les capteurs d'état ne sont pas disponibles.",
         "card_updated": "Carte mise à jour {time}",
-        "refresh": "Actualiser depuis HelloFresh",
-        "refreshed": "Actualisé depuis HelloFresh.",
+        "refresh": "Actualiser depuis {brand}",
+        "refreshed": "Actualisé depuis {brand}.",
         "refresh_failed": "Échec de l'actualisation : {error}"
       },
       "spending": {
@@ -1557,8 +1557,8 @@
         "monthly": "Coût mensuel des box",
         "peak": "Maximum {price}",
         "chart_label": {
-          "one": "Coût mensuel des box HelloFresh sur le dernier mois",
-          "other": "Coût mensuel des box HelloFresh sur les {count} derniers mois"
+          "one": "Coût mensuel des box {brand} sur le dernier mois",
+          "other": "Coût mensuel des box {brand} sur les {count} derniers mois"
         },
         "by_month": "Par mois",
         "recent_boxes": "Box récentes",

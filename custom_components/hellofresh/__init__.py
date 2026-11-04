@@ -65,6 +65,7 @@ from .const import (
     CONF_TOKEN_TYPE,
     CONF_USE_CURL_CFFI_HEADERS,
     CONF_USERNAME,
+    DEFAULT_COUNTRY,
     DEFAULT_DELIVERY_TRACKING_REFRESH_INTERVAL_SECONDS,
     DEFAULT_DELIVERY_WATCH_INTERVAL_MINUTES,
     DEFAULT_ENABLE_FAVORITES,
@@ -108,6 +109,8 @@ from .const import (
     SERVICE_SKIP_WEEK,
     SERVICE_UNSKIP_WEEK,
     TRACEY_COUNTRIES,
+    account_brand,
+    account_features,
 )
 from .coordinator import HelloFreshDataUpdateCoordinator
 from .frontend import (
@@ -686,6 +689,9 @@ async def _async_register_services(hass: HomeAssistant) -> None:
             "next_holiday_delivery_date",
         )
         summary: dict[str, object] = {key: _value(key) for key in keys}
+        country = getattr(coordinator.config_entry, "data", {}).get(CONF_COUNTRY, DEFAULT_COUNTRY)
+        summary["brand"] = account_brand(country)
+        summary["features"] = account_features(country)
         summary["selected_plan_total_price_currency"] = data.selected_plan_total_price_currency
         summary["account_credit_currency"] = data.account_credit_currency
         # Week ids behind the counters, so the card can make them clickable (the click
@@ -709,6 +715,12 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         summary["next_box_discount"] = data.next_box_discount
         return summary
 
+    def _require_feature(coordinator: HelloFreshDataUpdateCoordinator, feature: str) -> None:
+        country = getattr(coordinator.config_entry, "data", {}).get(CONF_COUNTRY, DEFAULT_COUNTRY)
+        if not account_features(country)[feature]:
+            label = feature.replace("_", " ")
+            raise HomeAssistantError(f"{account_brand(country)} does not support {label}.")
+
     async def async_get_food_profile(service_call: ServiceCall) -> ServiceResponse:
         """Return the customer's food profile plus the full catalog of selectable options.
 
@@ -716,7 +728,9 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         regular sensor poll), so the Food Profile card can read current picks and every
         possible option in one call.
         """
-        client = _resolve_single_coordinator(hass, service_call).client
+        coordinator = _resolve_single_coordinator(hass, service_call)
+        _require_feature(coordinator, "food_profile")
+        client = coordinator.client
         profile = await client.async_get_food_profile()
         options = await client.async_get_food_profile_options()
         # How much of the profile is filled in, so the card can show a progress figure.
@@ -735,6 +749,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         is changed. Returns the saved profile so the card can re-render from the server's truth.
         """
         coordinator = _resolve_single_coordinator(hass, service_call)
+        _require_feature(coordinator, "food_profile")
         changes: dict[str, object] = {}
         if ATTR_TASTE in service_call.data:
             changes["taste"] = service_call.data[ATTR_TASTE]
@@ -832,6 +847,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         menu you already have in hand.
         """
         coordinator = _single_coordinator(service_call)
+        _require_feature(coordinator, "favorites")
         recipe_ids = list(service_call.data.get(ATTR_RECIPE_IDS) or [])
         if not recipe_ids:
             favorites = await coordinator.client.async_list_favorites()
@@ -907,6 +923,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
     async def async_add_favorite(service_call: ServiceCall) -> ServiceResponse:
         """Bookmark a recipe in the customer's cookbook."""
         coordinator = _single_coordinator(service_call)
+        _require_feature(coordinator, "favorites")
         favorite = await coordinator.client.async_add_favorite(service_call.data[ATTR_RECIPE_ID])
         await coordinator.async_request_refresh()
         return {"favorite": favorite.as_dict()}
@@ -918,6 +935,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         HelloFresh's app uses the same route. A failure is explained in the error.
         """
         coordinator = _single_coordinator(service_call)
+        _require_feature(coordinator, "favorites")
         removed = await coordinator.client.async_remove_favorite(service_call.data[ATTR_RECIPE_ID])
         await coordinator.async_request_refresh()
         return {"removed": removed}
@@ -925,6 +943,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
     async def async_get_recipe_collections(service_call: ServiceCall) -> ServiceResponse:
         """Return the browsable categories of the public recipe catalog."""
         coordinator = _single_coordinator(service_call)
+        _require_feature(coordinator, "recipe_catalog")
         collections = await coordinator.client.async_get_recipe_collections()
         return {"collections": [collection.as_dict() for collection in collections]}
 
@@ -936,6 +955,7 @@ async def _async_register_services(hass: HomeAssistant) -> None:
         subcollections are returned since results span categories.
         """
         coordinator = _single_coordinator(service_call)
+        _require_feature(coordinator, "recipe_catalog")
         query = str(service_call.data.get(ATTR_SEARCH) or "").strip()
         limit = int(service_call.data.get(ATTR_LIMIT, 50))
         if query:

@@ -61,12 +61,18 @@ export class AccountView {
   }
 
   onRefresh() {
-    if (this.tab === "profile") this.profile.onRefresh();
+    if (this.tab === "profile" && this.card.summarySettled && this.card.supports("food_profile")) this.profile.onRefresh();
     if (this.spending || this.spendingError) this._fetchSpending();
   }
 
   render() {
-    const tabs = `<div class="hf-segment hf-subtabs" role="tablist" aria-label="${ht("account.sections")}">${TABS.map(
+    // A stored HelloFresh profile tab must wait for the selected account's capabilities.
+    if (this.tab === "profile" && !this.card.summarySettled) {
+      return `<div class="hf-skeletons"><div class="hf-skeleton"></div></div>`;
+    }
+    const available = TABS.filter((tab) => tab.key !== "profile" || this.card.supports("food_profile"));
+    if (!available.some((tab) => tab.key === this.tab)) this.tab = "plan";
+    const tabs = `<div class="hf-segment hf-subtabs" role="tablist" aria-label="${ht("account.sections")}">${available.map(
       (t) => `<button role="tab" data-action="acct-tab" data-tab="${t.key}" aria-pressed="${this.tab === t.key}" aria-selected="${this.tab === t.key}">${icon(t.icon)}${esc(t.label)}</button>`
     ).join("")}</div>`;
     let body = "";
@@ -238,7 +244,7 @@ export class AccountView {
         })
         .join("")}</div>`;
     }
-    return `<section class="hf-panel">${head}<p class="hf-small hf-muted" style="margin:6px 0 10px">${ht("account.presets_note")}</p>${list}</section>`;
+    return `<section class="hf-panel">${head}<p class="hf-small hf-muted" style="margin:6px 0 10px">${this.card.ht("account.presets_note")}</p>${list}</section>`;
   }
 
   async _fetchPresets() {
@@ -286,7 +292,7 @@ export class AccountView {
         ${cells.length ? `<div class="hf-health" style="margin-top:10px">${cells.join("")}</div>` : `<p class="hf-small hf-muted">${ht("health.no_sensors")}</p>`}
         <div class="hf-actions" style="margin-top:12px;justify-content:space-between">
           <span class="hf-small hf-muted">${ht("health.card_updated", { time: last })} · v${esc(ACCOUNT_VERSION)}</span>
-          <button class="hf-btn sm" data-action="refresh-data" ${card.busy ? "disabled" : ""}>${icon("mdi:cloud-refresh-outline")}${ht("health.refresh")}</button>
+          <button class="hf-btn sm" data-action="refresh-data" ${card.busy ? "disabled" : ""}>${icon("mdi:cloud-refresh-outline")}${this.card.ht("health.refresh")}</button>
         </div></section>`;
   }
 
@@ -381,7 +387,7 @@ export class AccountView {
     return `<section class="hf-panel">
         <div class="hf-sectionhead" style="margin-top:0"><h2 class="hf-h2">${ht("spending.monthly")}</h2>
           ${max > 0 ? `<span class="hf-sectionnote">${ht("spending.peak", { price: L.fmtPrice(max, currency) })}</span>` : ""}</div>
-        <div class="hf-barchart" role="img" aria-label="${ht("spending.chart_label", { count: n })}">
+        <div class="hf-barchart" role="img" aria-label="${this.card.ht("spending.chart_label", { count: n })}">
           <div class="hf-bc-plot"><div class="hf-bc-cols" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${cols}</div>${trend}</div>
           <div class="hf-bc-axis" style="grid-template-columns:repeat(${n},minmax(0,1fr))">${axis}</div>
         </div>
@@ -428,6 +434,7 @@ export class AccountView {
     const card = this.card;
     switch (el.getAttribute("data-action")) {
       case "acct-tab":
+        if (el.getAttribute("data-tab") === "profile" && !card.supports("food_profile")) return;
         this.tab = el.getAttribute("data-tab");
         L.storageSet(L.STORAGE_KEYS.accountTab, this.tab);
         card.renderView();
@@ -457,7 +464,7 @@ export class AccountView {
     try {
       await card.callAction("refresh_data");
       await card.refresh({ quiet: true });
-      card.toast(t("health.refreshed"));
+      card.toast(this.card.t("health.refreshed"));
     } catch (err) {
       card.toast(t("health.refresh_failed", { error: (err && err.message) || err }), true);
     }

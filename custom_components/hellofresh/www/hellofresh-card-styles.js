@@ -60,7 +60,7 @@ export const CARD_STYLES = `
     --hf-danger-bg: color-mix(in srgb, #ef4444 18%, var(--hf-surface));
     --hf-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.3);
   }
-  :host([accent="theme"]) {
+  :host([everyplate]), :host([accent="theme"]) {
     --hf-accent: var(--primary-color, #03a9f4);
     --hf-accent-ink: var(--text-primary-color, #fff);
     --hf-ring: var(--primary-color, #03a9f4);

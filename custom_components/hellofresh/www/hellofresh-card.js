@@ -115,6 +115,7 @@ class HelloFreshCard extends HTMLElement {
     this._weeks = null;
     this._account = null;
     this._summary = null;
+    this._summarySettled = false;
     // The Week tab's meal plan (get_meal_plan).
     this._mealPlan = null;
     this._mealPlanError = null;
@@ -163,7 +164,6 @@ class HelloFreshCard extends HTMLElement {
     if (!config || typeof config !== "object") throw new Error("Invalid configuration");
     const views = normalizeViews(config.views);
     this._config = {
-      title: "HelloFresh",
       logo: true,
       image_width: 400,
       accent: "brand",
@@ -304,6 +304,23 @@ class HelloFreshCard extends HTMLElement {
     return this._summary;
   }
 
+  get brandParams() {
+    const brand = this._summary?.brand || "HelloFresh";
+    return { brand };
+  }
+
+  t(key, params) {
+    return t(key, { ...this.brandParams, ...params });
+  }
+
+  ht(key, params) {
+    return ht(key, { ...this.brandParams, ...params });
+  }
+
+  get summarySettled() {
+    return this._summarySettled;
+  }
+
   get busy() {
     return this._busy;
   }
@@ -345,8 +362,19 @@ class HelloFreshCard extends HTMLElement {
     return Number.isFinite(weeks) ? weeks : 2;
   }
 
+  supports(feature) {
+    // Missing flags keep cards compatible with older integration versions.
+    return this._summary?.features?.[feature] !== false;
+  }
+
+  get visibleViews() {
+    const views = this._config.views.filter((key) => key !== "recipes" || this.supports("recipe_catalog"));
+    // A card configured with only Recipes still has a useful landing page for EveryPlate.
+    return views.length ? views : ["overview"];
+  }
+
   hasView(key) {
-    return Boolean(this._config && this._config.views.includes(key));
+    return Boolean(this._config && this.visibleViews.includes(key));
   }
 
   // ---- meal plan (the Week tab) ----------------------------------------------------------
@@ -483,14 +511,16 @@ class HelloFreshCard extends HTMLElement {
     this._summaryLoading = true;
     try {
       this._summary = await this.call("get_account_summary");
+      if (!this.hasView(this._view)) this._view = this.visibleViews[0];
     } catch (err) {
       // The summary only decorates (header, banners, Account); the weeks error covers outages.
       // eslint-disable-next-line no-console
       console.warn("hellofresh: account summary unavailable", err);
     } finally {
+      this._summarySettled = true;
       this._summaryLoading = false;
       this._renderChrome();
-      if (this._view === "account") this.renderView();
+      if (["account", "recipes"].includes(this._view) || !this.supports("recipe_catalog")) this.renderView();
       if (this._summaryQueued) {
         this._summaryQueued = false;
         this._fetchSummary();
@@ -1129,7 +1159,8 @@ class HelloFreshCard extends HTMLElement {
 
   _renderChrome() {
     if (!this._shell || !this._config || !this._textLoaded) return;
-    this._shell.tabs.setAttribute("aria-label", t("card.sections"));
+    this.toggleAttribute("everyplate", this._summary?.brand === "EveryPlate");
+    this._shell.tabs.setAttribute("aria-label", this.t("card.sections"));
     this._shell.appbar.innerHTML = this._renderAppbar();
     this._shell.appbar.hidden = !this._shell.appbar.innerHTML.trim();
     this._shell.tabs.innerHTML = this._renderTabs();
@@ -1141,6 +1172,10 @@ class HelloFreshCard extends HTMLElement {
   renderView() {
     if (!this._shell || !this._config || !this._textLoaded) return;
     const main = this._shell.main;
+    if (this._view === "recipes" && !this._summarySettled && !this._error) {
+      main.innerHTML = `<div class="hf-skeletons"><div class="hf-skeleton"></div></div>`;
+      return;
+    }
     const view = this._activeView();
     const ui = this._captureUi(main);
     // A view rendered right after another one was showing (a tab switch, the first render).
@@ -1232,8 +1267,10 @@ class HelloFreshCard extends HTMLElement {
 
   _renderAppbar() {
     const cfg = this._config;
-    const logo = cfg.logo === false || cfg.logo === "" ? "" : cfg.logo === true || cfg.logo == null ? LOGO_URL : String(cfg.logo);
-    const title = cfg.title;
+    // Do not present the HelloFresh logo as EveryPlate's. A custom logo URL still wins.
+    const defaultLogo = this._summary?.brand === "EveryPlate" ? "" : LOGO_URL;
+    const logo = cfg.logo === false || cfg.logo === "" ? "" : cfg.logo === true || cfg.logo == null ? defaultLogo : String(cfg.logo);
+    const title = cfg.title ?? this._summary?.brand ?? "HelloFresh";
     const sub = this._subtitle();
     const menu = this._wantsMenuButton();
     this._menuShown = menu;
@@ -1249,7 +1286,7 @@ class HelloFreshCard extends HTMLElement {
   }
 
   _renderTabs() {
-    const views = this._config.views;
+    const views = this.visibleViews;
     if (views.length < 2) return "";
     const needs = L.weeksNeedingAttention(this._weeks || []).length;
     return VIEWS.filter((v) => views.includes(v.key))
@@ -1279,7 +1316,7 @@ class HelloFreshCard extends HTMLElement {
       const card = html(`<strong>${esc(L.cardOnFile(s) || t("banner.payment_card"))}</strong>`);
       const date = L.fmtCardExpiry(s.payment_card_expiry);
       const key = `banner.card_${s.payment_method_expired ? "expired" : "expiring"}${date ? "_date" : ""}`;
-      const text = ht(key, { card, date });
+      const text = this.ht(key, { card, date });
       out.push(`<div class="hf-notice ${s.payment_method_expired ? "tone-danger" : "tone-warn"}" role="alert">
         ${icon(s.payment_method_expired ? "mdi:credit-card-off-outline" : "mdi:credit-card-clock-outline")}<div class="hf-noticebody">${text}</div></div>`);
     }
@@ -1440,7 +1477,9 @@ class HelloFreshCardEditor extends HTMLElement {
     ev.stopPropagation();
     const value = (ev.detail && ev.detail.value) || {};
     const config = { ...this._config };
-    config.title = value.title != null ? value.title : "HelloFresh";
+    // Editing another field must not turn the automatic brand heading into a fixed title.
+    if (this._config.title == null && value.title === "HelloFresh") delete config.title;
+    else config.title = value.title != null ? value.title : "HelloFresh";
     if (value.logo === false) config.logo = false;
     else if (typeof this._config.logo === "string") config.logo = this._config.logo;
     else delete config.logo;

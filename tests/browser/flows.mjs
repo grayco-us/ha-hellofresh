@@ -68,6 +68,66 @@ const assert = (cond, msg) => {
   if (!cond) throw new Error(msg);
 };
 
+await check("EveryPlate: brand heading, supported tabs, and no cookbook or food-profile requests", async () => {
+  const page = await open({ brand: "everyplate", view: "recipes" });
+  assert((await text(page, ".hf-apptitle h1")) === "EveryPlate", "EveryPlate heading");
+  assert(!(await q(page, ".hf-logo")), "no HelloFresh logo on EveryPlate");
+  assert(!/HelloFresh/.test(await text(page, ".js-banners")), "payment notices use the account brand");
+  assert(!(await q(page, '.hf-tab[data-view="recipes"]')), "no standalone recipe catalog");
+  assert((await page.evaluate(() => window.__card.view)) === "overview", "unsupported starting section falls back");
+  await page.evaluate(() => {
+    window.__card.navigate("recipes");
+    window.__card.navigate("account");
+    window.__card._views.account.tab = "profile";
+    window.__card.renderView();
+  });
+  assert(!(await q(page, '[data-tab="profile"]')), "no food-preference tab");
+  assert(await q(page, '[data-tab="plan"]'), "plan remains available");
+  assert(await q(page, '[data-tab="spending"]'), "spending remains available");
+  await page.evaluate(() => {
+    window.__card.navigate("menu");
+    window.__card._views.menu.f.highlight = "favorite";
+    window.__card.renderView();
+  });
+  assert((await page.evaluate(() => window.__card._views.menu.f.highlight)) === "", "old cookbook filter cleared");
+  assert(/EveryPlate picked/.test(await text(page, ".js-main")), "meal-selection notices use the account brand");
+  const unsupported = new Set(["get_food_profile", "set_food_profile", "get_favorites", "add_favorite", "remove_favorite", "get_recipe_collections", "get_catalog_recipes"]);
+  assert((await calls(page)).every((call) => !unsupported.has(call.service)), "no unsupported service calls");
+  await page.close();
+});
+
+await check("EveryPlate: custom card heading and logo still win", async () => {
+  const page = await open({ brand: "everyplate", config: JSON.stringify({ title: "My dinners", logo: "/hellofresh/hellofresh-logo.png" }) });
+  assert((await text(page, ".hf-apptitle h1")) === "My dinners", "custom title preserved");
+  assert(await q(page, ".hf-logo"), "custom logo preserved");
+  await page.close();
+});
+
+await check("EveryPlate: translated branding stays separate from a HelloFresh card on the same page", async () => {
+  const page = await open({ brand: "everyplate", lang: "nb", view: "menu" });
+  assert(!/HelloFresh|\{brand\}/.test(await text(page, ".js-banners")), "translated payment notices use EveryPlate");
+  await page.evaluate(async () => {
+    const originalCall = window.__hass.callService.bind(window.__hass);
+    const hass = { ...window.__hass, callService: async (...args) => {
+      const result = await originalCall(...args);
+      if (args[1] === "get_account_summary") {
+        result.response = { ...result.response, brand: "HelloFresh", features: { recipe_catalog: true, favorites: true, food_profile: true } };
+      }
+      return result;
+    }};
+    const other = document.createElement("hellofresh-card");
+    other.setConfig({ type: "custom:hellofresh-card", config_entry_id: "hf" });
+    other.hass = hass;
+    document.body.append(other);
+    window.__otherCard = other;
+  });
+  await page.waitForFunction(() => window.__otherCard.summarySettled);
+  assert((await text(page, ".hf-apptitle h1")) === "EveryPlate", "first card stays EveryPlate");
+  assert(await page.evaluate(() => window.__otherCard.shadowRoot.querySelector(".hf-apptitle h1").textContent === "HelloFresh"), "second card uses HelloFresh");
+  assert(await page.evaluate(() => /HelloFresh/.test(window.__otherCard.shadowRoot.querySelector(".js-banners").textContent)), "second card's notices use HelloFresh");
+  await page.close();
+});
+
 await check("combined meals + extras save is ONE select_meals call", async () => {
   const page = await open({ view: "menu" });
   await click(page, '.hf-tile:not(.selected) [data-action="add"]');

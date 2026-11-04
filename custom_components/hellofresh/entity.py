@@ -6,7 +6,7 @@ from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
-from .const import DOMAIN
+from .const import CONF_COUNTRY, DOMAIN, account_brand
 from .coordinator import HelloFreshDataUpdateCoordinator
 
 
@@ -35,7 +35,9 @@ class HelloFreshCoordinatorEntity(CoordinatorEntity[HelloFreshDataUpdateCoordina
         return DeviceInfo(
             identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
             entry_type=DeviceEntryType.SERVICE,
-            manufacturer="HelloFresh",
+            manufacturer=account_brand(
+                getattr(self.coordinator.config_entry, "data", {}).get(CONF_COUNTRY, "us")
+            ),
             model="Customer Account",
             name=self.coordinator.config_entry.title,
         )

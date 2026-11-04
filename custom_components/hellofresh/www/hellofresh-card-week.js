@@ -144,7 +144,7 @@ export class WeekView {
     return `<div class="hf-weekhead">
         <div class="hf-weektitle">
           <div class="hf-weekdate">${esc(range)}</div>
-          <div class="hf-weekpills">${UI.statePill(week)}${week.display_name ? `<span class="hf-weeksub">${esc(week.display_name)}</span>` : ""}</div>
+          <div class="hf-weekpills">${UI.statePill(week, L.weekState(week), this.card.brandParams)}${week.display_name ? `<span class="hf-weeksub">${esc(week.display_name)}</span>` : ""}</div>
         </div>
         <div class="hf-actions">${actions.join("")}</div>
       </div>`;
