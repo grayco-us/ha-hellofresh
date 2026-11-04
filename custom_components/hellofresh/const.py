@@ -245,6 +245,7 @@ COUNTRY_BASE_URLS: dict[str, str] = {
     "dk": "https://www.hellofresh.dk",
     "no": "https://www.hellofresh.no",
     "se": "https://www.hellofresh.se",
+    "everyplate_us": "https://www.everyplate.com",
 }
 
 # Countries where HelloFresh runs its own last-mile delivery fleet AND the Tracey live
@@ -264,13 +265,15 @@ TRACEY_SITES = {
 }
 TRACEY_COUNTRIES = frozenset(TRACEY_SITES)
 
-# The config-flow key is not always the ISO 3166 country code HelloFresh's API expects.
+# The config-flow key is not always the country/business-unit code the API expects.
 # Notably the UK site selects `uk` but the API uses `GB` (confirmed from a HAR:
 # `/gw/auth/email/status` posts `{"country":"GB"}`). Sending the wrong code (e.g. `UK`)
 # makes /gw/login and /gw/refresh fail, which is why the integration didn't work outside
 # the US. Map each config key to the API country code; unlisted keys upper-case as-is.
 COUNTRY_API_CODES: dict[str, str] = {
     "uk": "GB",
+    # EveryPlate US uses the ER business unit, not the ISO country code US.
+    "everyplate_us": "ER",
 }
 
 # Default API locale per config key. The frontends use the native locale (e.g. `de-DE`).
@@ -296,14 +299,41 @@ COUNTRY_API_LOCALES: dict[str, str] = {
     "dk": "da-DK",
     "no": "nb-NO",
     "se": "sv-SE",
+    "everyplate_us": "en-US",
 }
 
 
 def api_country_code(country: str) -> str:
-    """Return the ISO country code HelloFresh's API expects for a config-flow key."""
+    """Return the country/business-unit code the API expects for a config-flow key."""
     return COUNTRY_API_CODES.get(country, country.upper())
 
 
 def api_locale(country: str) -> str:
     """Return the default API locale for a config-flow key."""
     return COUNTRY_API_LOCALES.get(country, f"en-{api_country_code(country)}")
+
+
+def iso_country_code(country: str) -> str:
+    """Return the geographic country, distinct from EveryPlate's ER business unit."""
+    return "US" if country == "everyplate_us" else api_country_code(country)
+
+
+def account_brand(country: str) -> str:
+    """Return the customer-facing brand while keeping the shared integration domain."""
+    return "EveryPlate" if country == "everyplate_us" else "HelloFresh"
+
+
+def account_title(country: str) -> str:
+    """Name an account using its brand and geographic region, not its API unit."""
+    region = "US" if country == "everyplate_us" else country.upper()
+    return f"{account_brand(country)} ({region})"
+
+
+def account_features(country: str) -> dict[str, bool]:
+    """Features exposed by the brand, separate from transient API failures.
+
+    EveryPlate US users confirmed menus, meal saves, delivery details and recipe details.
+    Its standalone recipe catalog/cookbook and food-profile editor are unavailable.
+    """
+    supported = country != "everyplate_us"
+    return dict.fromkeys(("recipe_catalog", "favorites", "food_profile"), supported)

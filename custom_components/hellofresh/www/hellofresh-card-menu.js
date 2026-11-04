@@ -368,9 +368,9 @@ function renderWeekHead(card, week, kind) {
   const editable = L.isWeekEditable(week);
   const rel = L.relativeWeek(week);
   const deadline = week.selection_deadline ? new Date(week.selection_deadline) : null;
-  const pills = [UI.statePill(week, state)];
+  const pills = [UI.statePill(week, state, card.brandParams)];
   if (L.wasPreselected(week) && L.stateKey(week, state) !== "preselected") {
-    pills.push(pill(t("state.preselected.label"), "warn", null, t("week.preselected_title")));
+    pills.push(pill(t("state.preselected.label"), "warn", null, card.t("week.preselected_title")));
   }
   if (L.isHolidayShifted(week)) {
     pills.push(pill(t("week.holiday_schedule"), "info", "mdi:calendar-star", week.holiday_message || ""));
@@ -418,7 +418,7 @@ function renderWeekNotices(card, week, kind, view) {
   const out = [];
   if (card.box.downgradedWeek === week.week_id) {
     out.push(`<div class="hf-notice tone-warn" role="alert">${icon("mdi:alert-outline")}
-      <div class="hf-noticebody"><strong>${ht("box.downsized_title")}</strong> ${ht("box.downsized_body")}</div>
+      <div class="hf-noticebody"><strong>${card.ht("box.downsized_title")}</strong> ${ht("box.downsized_body")}</div>
       <button class="hf-iconbtn" data-action="dismiss-downgrade" aria-label="${ht("common.dismiss")}">${icon("mdi:close")}</button></div>`);
   }
   if (L.isSkipped(week)) {
@@ -429,7 +429,7 @@ function renderWeekNotices(card, week, kind, view) {
   } else if (kind === "menu" && L.isAutoPicked(week)) {
     const deadline = week.selection_deadline ? new Date(week.selection_deadline) : null;
     out.push(`<div class="hf-notice tone-warn">${icon("mdi:auto-fix")}
-      <div class="hf-noticebody"><strong>${ht("week.autopicked_title")}</strong> ${
+      <div class="hf-noticebody"><strong>${card.ht("week.autopicked_title")}</strong> ${
         deadline ? ht("week.autopicked_before", { date: L.fmtDateTime(deadline) }) : ht("overview.autopicked_body")
       }</div></div>`);
   } else if (!L.isWeekEditable(week) && !L.isPastWeek(week) && !L.isDelivered(week) && !L.isShipping(week)) {
@@ -713,6 +713,7 @@ export class MealsView {
     const selection = box.displayMeals(week);
     const sel = (r) => L.tileSelected(selection, r);
     const f = this.f;
+    if (f.highlight === "favorite" && !card.supports("favorites")) f.highlight = "";
     const applyFilters = !history && !f.selectedOnly;
     const sectionIds = applyFilters ? L.menuSectionIds(week, f.section) : null;
     const serverIds = applyFilters ? this._lookup(week, L.activeServerFilters(week, f.server)) : null;
@@ -840,7 +841,7 @@ export class MealsView {
       this._filterRow(
         t("filters.highlights"),
         this._chip("f-highlight", "", ht("filters.all"), !f.highlight) +
-          L.HIGHLIGHT_FILTERS.map((h) =>
+          L.HIGHLIGHT_FILTERS.filter((h) => h.key !== "favorite" || this.card.supports("favorites")).map((h) =>
             this._chip("f-highlight", h.key, `${h.key === "favorite" ? icon("mdi:heart-outline") : ""}${esc(h.label)}`, f.highlight === h.key)
           ).join("")
       )
@@ -1518,7 +1519,7 @@ export function renderBoxBar(card, week) {
     note = t("box.min_note", { min: L.MIN_MEALS });
     noteCls = " warn";
   } else if (required && count !== required && count > 0) {
-    note = t("box.resized_note", { selected: count, required });
+    note = card.t("box.resized_note", { selected: count, required });
     noteCls = " warn";
   } else if (dirty) note = t("box.unsaved_changes");
   else note = t("box.saved_note");
@@ -1632,15 +1633,15 @@ function renderReview(card, week) {
   const priceTable = rows.length
     ? `<div><div class="hf-eyebrow" style="margin-bottom:8px">${ht("box.price")}</div><div class="hf-pricetable">${rows
         .map(([k, v, bold]) => `<div class="hf-prow${bold ? " total" : ""}"><span>${k}</span><span>${esc(v)}</span></div>`)
-        .join("")}</div>${est.status === "ok" ? `<p class="hf-small hf-muted" style="margin:8px 0 0">${ht("box.estimate_note")}</p>` : ""}</div>`
+        .join("")}</div>${est.status === "ok" ? `<p class="hf-small hf-muted" style="margin:8px 0 0">${card.ht("box.estimate_note")}</p>` : ""}</div>`
     : "";
   const count = L.mealsCount(meals);
   const required = Number(week.meals_required) || 0;
   const notes = [];
   if (box.mealsDirty(week) && count < L.MIN_MEALS) {
-    notes.push(`<div class="hf-notice tone-warn">${icon("mdi:alert-outline")}<div class="hf-noticebody">${ht("box.min_notice", { min: L.MIN_MEALS })}</div></div>`);
+    notes.push(`<div class="hf-notice tone-warn">${icon("mdi:alert-outline")}<div class="hf-noticebody">${card.ht("box.min_notice", { min: L.MIN_MEALS })}</div></div>`);
   } else if (required && count !== required && count > 0) {
-    notes.push(`<div class="hf-notice tone-info">${icon("mdi:resize")}<div class="hf-noticebody">${ht("box.resized_notice", {
+    notes.push(`<div class="hf-notice tone-info">${icon("mdi:resize")}<div class="hf-noticebody">${card.ht("box.resized_notice", {
       meals: strong(t("meals.count", { count })),
       required,
     })}</div></div>`);

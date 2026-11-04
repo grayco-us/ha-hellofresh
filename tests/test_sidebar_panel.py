@@ -192,3 +192,12 @@ def test_diagnostics_list_the_sidebar_entries(monkeypatch: pytest.MonkeyPatch) -
     hass = _hass(entry)
     _run(async_add_entry_panel(hass, entry))
     assert async_get_frontend_diagnostics(hass)["sidebar_panels"] == [PANEL_URL_PATH]
+
+
+def test_everyplate_single_account_has_its_own_sidebar_brand(monkeypatch) -> None:
+    sidebar = _Sidebar(monkeypatch)
+    entry = _entry("ep", "EveryPlate (US)")
+    entry.data = {"country": "everyplate_us"}
+    _run(async_add_entry_panel(_hass(entry), entry))
+    assert sidebar.panels[PANEL_URL_PATH]["sidebar_title"] == "EveryPlate"
+    assert sidebar.panels[PANEL_URL_PATH]["config"] == {}

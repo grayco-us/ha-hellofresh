@@ -66,6 +66,8 @@ function makeCard(weeks, { fail = null, downgraded = false } = {}) {
     toast(message, isError = false) { this.toasts.push([message, isError]); },
     async reloadWeeks() {},
     hasView(v) { return this.config.views.includes(v); },
+    t(key, params) { return I18n.t(key, params); },
+    ht(key, params) { return I18n.ht(key, params); },
   };
   return card;
 }
@@ -76,6 +78,7 @@ def _run(body: str) -> object:
     script = f"""
     {PREAMBLE}
     const M = await import({json.dumps(MENU.as_uri() + "?v=test")});
+    const I18n = await import({json.dumps((WWW / "hellofresh-i18n.js").as_uri() + "?v=test")});
     const result = await (async () => {{ {body} }})();
     console.log(JSON.stringify(result));
     """

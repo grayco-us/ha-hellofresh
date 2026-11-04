@@ -779,3 +779,32 @@ def test_reconfigure_token_step_updates_entry_on_success() -> None:
     assert result["type"] == "abort"
     assert result["reason"] == "reconfigure_successful"
     assert flow._updated["data_updates"][CONF_ACCESS_TOKEN] == "fresh-token"
+
+
+@pytest.mark.parametrize("method", ["credentials", "token"])
+def test_everyplate_setup_names_and_namespaces_the_account(monkeypatch, method) -> None:
+    flow = _make_flow()
+
+    async def validate(*_args, **_kwargs):
+        return {"account_id": "shared-account-id"}
+
+    monkeypatch.setattr(flow, "_async_validate", validate)
+    monkeypatch.setattr(flow, "_async_validate_token", validate)
+    payload = {CONF_COUNTRY: "everyplate_us"}
+    if method == "credentials":
+        payload.update({CONF_USERNAME: "cook@example.com", CONF_PASSWORD: "made-up"})
+    else:
+        payload[CONF_TOKEN] = "made-up-access-token"
+    result = _run(getattr(flow, f"async_step_{method}")(payload))
+    assert result["title"] == "EveryPlate (US)"
+    assert result["data"][CONF_COUNTRY] == "everyplate_us"
+    assert flow._uid == "everyplate_us::shared-account-id"
+
+
+def test_everyplate_options_hide_and_disable_cookbook_polling() -> None:
+    flow = _make_options_flow("everyplate_us")
+    assert CONF_ENABLE_FAVORITES not in _schema_keys(_run(flow.async_step_init())["data_schema"])
+    payload = _default_options_payload()
+    payload.pop(CONF_ENABLE_FAVORITES)
+    result = _run(flow.async_step_init(payload))
+    assert result["data"][CONF_ENABLE_FAVORITES] is False

@@ -56,6 +56,11 @@ const { hass, calls, fx } = buildHass(location.origin, {
   language: params.get("lang") || "en",
   mealPlan: params.get("mealplan") === "1",
 });
+// Brand capabilities with made-up data; no EveryPlate credentials or live requests.
+if (params.get("brand") === "everyplate") {
+  fx.summary.brand = "EveryPlate";
+  fx.summary.features = { recipe_catalog: false, favorites: false, food_profile: false };
+}
 window.__hass = hass;
 window.__calls = calls;
 window.__fx = fx;

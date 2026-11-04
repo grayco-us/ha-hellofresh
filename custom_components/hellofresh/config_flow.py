@@ -97,6 +97,8 @@ from .const import (
     MIN_SCAN_INTERVAL_MINUTES,
     OPTIONS_SECTION_WEEK_TAB,
     TRACEY_COUNTRIES,
+    account_features,
+    account_title,
 )
 from .parsers import token_payload_to_entry_data
 from .tls_transport import async_close_shared_session
@@ -166,7 +168,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_COUNTRY, default=DEFAULT_COUNTRY): vol.In(
-                        sorted(COUNTRY_BASE_URLS)
+                        {key: account_title(key) for key in sorted(COUNTRY_BASE_URLS)}
                     ),
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
@@ -208,7 +210,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_COUNTRY, default=self._selected_country): vol.In(
-                        sorted(COUNTRY_BASE_URLS)
+                        {key: account_title(key) for key in sorted(COUNTRY_BASE_URLS)}
                     ),
                     vol.Required(CONF_TOKEN): str,
                     vol.Optional(
@@ -274,7 +276,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     data_updates=_entry_data_from_credentials(
                         user_input[CONF_USERNAME], user_input[CONF_PASSWORD], country, tokens
                     ),
-                    title=f"HelloFresh ({country.upper()})",
+                    title=account_title(country),
                     reason="reconfigure_successful",
                 )
 
@@ -283,7 +285,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_COUNTRY, default=self._selected_country): vol.In(
-                        sorted(COUNTRY_BASE_URLS)
+                        {key: account_title(key) for key in sorted(COUNTRY_BASE_URLS)}
                     ),
                     vol.Required(
                         CONF_USERNAME,
@@ -315,7 +317,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return self.async_update_reload_and_abort(
                         entry,
                         data_updates={CONF_COUNTRY: country, **token_data},
-                        title=f"HelloFresh ({country.upper()})",
+                        title=account_title(country),
                         reason="reconfigure_successful",
                     )
 
@@ -324,7 +326,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_COUNTRY, default=self._selected_country): vol.In(
-                        sorted(COUNTRY_BASE_URLS)
+                        {key: account_title(key) for key in sorted(COUNTRY_BASE_URLS)}
                     ),
                     vol.Required(CONF_TOKEN): str,
                 }
@@ -438,7 +440,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(f"{country}::{account_id}")
         self._abort_if_unique_id_configured()
         return self.async_create_entry(
-            title=f"HelloFresh ({country.upper()})",
+            title=account_title(country),
             data=_entry_data_from_credentials(username, password, country, tokens),
             options={CONF_LOG_AUTH_DIAGNOSTICS: self._initial_log_auth_diagnostics},
         )
@@ -458,7 +460,7 @@ class HelloFreshConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(f"{country}::{account_id}")
         self._abort_if_unique_id_configured()
         return self.async_create_entry(
-            title=f"HelloFresh ({country.upper()})",
+            title=account_title(country),
             data={CONF_COUNTRY: country, **token_data},
             options={CONF_LOG_AUTH_DIAGNOSTICS: self._initial_log_auth_diagnostics},
         )
@@ -635,13 +637,16 @@ class HelloFreshOptionsFlow(config_entries.OptionsFlowWithReload):
         are owned by the runtime login/refresh flow. The live delivery-tracking interval is
         offered only where that tracking exists (TRACEY_COUNTRIES).
         """
-        tracey_supported = self.config_entry.data.get(CONF_COUNTRY) in TRACEY_COUNTRIES
+        country = self.config_entry.data.get(CONF_COUNTRY, DEFAULT_COUNTRY)
+        tracey_supported = country in TRACEY_COUNTRIES
+        favorites_supported = account_features(country)["favorites"]
 
         if user_input is not None:
             data = {
                 CONF_SCAN_INTERVAL_MINUTES: user_input[CONF_SCAN_INTERVAL_MINUTES],
                 CONF_ENABLE_PUBLIC_MENU_FALLBACK: user_input[CONF_ENABLE_PUBLIC_MENU_FALLBACK],
-                CONF_ENABLE_FAVORITES: user_input[CONF_ENABLE_FAVORITES],
+                CONF_ENABLE_FAVORITES: favorites_supported
+                and user_input.get(CONF_ENABLE_FAVORITES, DEFAULT_ENABLE_FAVORITES),
                 CONF_ENABLE_PREP_LISTS: user_input[CONF_ENABLE_PREP_LISTS],
                 CONF_SHOW_DATA_QUALITY_ISSUES: user_input[CONF_SHOW_DATA_QUALITY_ISSUES],
                 CONF_SHOW_SIDEBAR_PANEL: user_input[CONF_SHOW_SIDEBAR_PANEL],
@@ -784,6 +789,10 @@ class HelloFreshOptionsFlow(config_entries.OptionsFlowWithReload):
                 ),
             }
         )
+        if not favorites_supported:
+            schema = {
+                key: value for key, value in schema.items() if key.schema != CONF_ENABLE_FAVORITES
+            }
         return self.async_show_form(step_id="init", data_schema=vol.Schema(schema))
 
 

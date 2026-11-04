@@ -102,6 +102,8 @@ function formatCount(count) {
 }
 
 function render(key, params, forHtml) {
+  // Shared helpers without an account keep the historical HelloFresh wording.
+  params = { brand: "HelloFresh", ...params };
   const text = template(key, params);
   return text
     .split(/(\{\w+\})/)

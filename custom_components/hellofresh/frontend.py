@@ -35,7 +35,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers.debounce import Debouncer
 
-from .const import CONF_SHOW_SIDEBAR_PANEL, DEFAULT_SHOW_SIDEBAR_PANEL, DOMAIN
+from .const import (
+    CONF_COUNTRY,
+    CONF_SHOW_SIDEBAR_PANEL,
+    DEFAULT_SHOW_SIDEBAR_PANEL,
+    DOMAIN,
+    account_brand,
+)
 from .issues import async_update_removed_cards_issue
 
 _LOGGER = logging.getLogger(__name__)
@@ -334,7 +340,8 @@ def _wanted_panels(
     ]
     for number, entry in enumerate(showing, start=1):
         url_path = PANEL_URL_PATH if number == 1 else f"{PANEL_URL_PATH}-{number}"
-        title = (entry.title or PANEL_TITLE) if several else PANEL_TITLE
+        brand = account_brand(getattr(entry, "data", {}).get(CONF_COUNTRY, "us"))
+        title = (entry.title or brand) if several else brand
         if title in titles:
             title = f"{title} {number}"
         titles.add(title)

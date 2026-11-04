@@ -15,6 +15,7 @@ from custom_components.hellofresh.const import (
     DEFAULT_COUNTRY,
     api_country_code,
     api_locale,
+    iso_country_code,
 )
 from custom_components.hellofresh.normalizers import _COUNTRY_CURRENCIES
 
@@ -43,7 +44,10 @@ def test_base_urls_are_https_and_unique() -> None:
     urls = list(COUNTRY_BASE_URLS.values())
     assert len(urls) == len(set(urls)), "two regions share a base URL"
     for url in urls:
-        assert url.startswith("https://www.hellofresh."), url
+        if url == COUNTRY_BASE_URLS.get("everyplate_us"):
+            assert url == "https://www.everyplate.com"
+        else:
+            assert url.startswith("https://www.hellofresh."), url
         assert not url.endswith("/"), f"trailing slash breaks path joins: {url}"
 
 
@@ -52,16 +56,17 @@ def test_currencies_are_iso_4217_codes() -> None:
         assert len(currency) == 3 and currency.isupper(), f"{country}: {currency}"
 
 
-def test_locales_match_their_api_country_code() -> None:
-    """A locale's region subtag must agree with the ISO code sent to the API.
+def test_locales_match_their_geographic_country_code() -> None:
+    """A locale's region subtag must agree with its geographic country.
 
-    This is what caught the original ``uk``/``GB`` bug: the config key is ``uk`` but the API and
+    EveryPlate uses the ER business unit with the geographic US locale.
+    This also catches the original ``uk``/``GB`` bug: the config key is ``uk`` but the API and
     the locale both use ``GB``, so a naive ``en-{key}`` would produce an invalid ``en-UK``.
     """
     for country in COUNTRY_BASE_URLS:
         language, _, region = api_locale(country).partition("-")
         assert language.isalpha() and len(language) == 2
-        assert region == api_country_code(country), f"{country}: locale region != API country"
+        assert region == iso_country_code(country), f"{country}: locale region != ISO country"
 
 
 def test_uk_maps_to_gb() -> None:
@@ -73,7 +78,7 @@ def test_uk_maps_to_gb() -> None:
 def test_api_code_falls_back_to_uppercased_key() -> None:
     """Unlisted keys upper-case as-is, so only genuine exceptions need an entry."""
     assert api_country_code("fr") == "FR"
-    assert set(COUNTRY_API_CODES) == {"uk"}
+    assert set(COUNTRY_API_CODES) == {"uk", "everyplate_us"}
 
 
 def test_multilingual_markets_use_their_native_locale() -> None:

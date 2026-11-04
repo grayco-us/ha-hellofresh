@@ -917,7 +917,7 @@
         "account": "Account"
       },
       "card": {
-        "sections": "HelloFresh sections",
+        "sections": "{brand} sections",
         "sidebar": "Sidebar",
         "open_sidebar": "Open the sidebar",
         "plan_size": {
@@ -937,10 +937,10 @@
       "banner": {
         "refresh_failed": "Couldn't refresh: {error}",
         "payment_card": "payment card",
-        "card_expired": "Your {card} has expired. Update it on HelloFresh or your next box may not ship.",
-        "card_expired_date": "Your {card} has expired ({date}). Update it on HelloFresh or your next box may not ship.",
-        "card_expiring": "Your {card} expires soon. Update it on HelloFresh before your next box is charged.",
-        "card_expiring_date": "Your {card} expires soon ({date}). Update it on HelloFresh before your next box is charged.",
+        "card_expired": "Your {card} has expired. Update it on {brand} or your next box may not ship.",
+        "card_expired_date": "Your {card} has expired ({date}). Update it on {brand} or your next box may not ship.",
+        "card_expiring": "Your {card} expires soon. Update it on {brand} before your next box is charged.",
+        "card_expiring_date": "Your {card} expires soon ({date}). Update it on {brand} before your next box is charged.",
         "holiday_date": "New delivery date: {date}."
       },
       "state": {
@@ -955,7 +955,7 @@
         "preselected": {
           "label": "Preselected",
           "short": "Preselected",
-          "hint": "HelloFresh picked these meals for you — review and adjust before the deadline."
+          "hint": "{brand} picked these meals for you — review and adjust before the deadline."
         },
         "shipping": {
           "label": "On the way",
@@ -1023,7 +1023,7 @@
         "holiday_change": "Holiday delivery change",
         "holiday_schedule": "Holiday schedule",
         "make_changes_by": "Make changes by {date}",
-        "autopicked_title": "HelloFresh picked these meals for you.",
+        "autopicked_title": "{brand} picked these meals for you.",
         "unskip_this_week": "Unskip this week",
         "review": "Review",
         "edit": "Edit",
@@ -1034,7 +1034,7 @@
         "nothing_ships": "Nothing ships this week.",
         "edit_by": "Edit by {date}",
         "no_box": "No box this week",
-        "review_picks": "Review HelloFresh's picks",
+        "review_picks": "Review {brand}'s picks",
         "pick_n_meals": {
           "one": "Pick {count} meal",
           "other": "Pick {count} meals"
@@ -1044,7 +1044,7 @@
         "next": "Next",
         "earlier_weeks": "Earlier weeks",
         "later_weeks": "Later weeks",
-        "preselected_title": "HelloFresh picked this week's meals.",
+        "preselected_title": "{brand} picked this week's meals.",
         "pantry": "Pantry",
         "unskip_week": "Unskip week",
         "skipped_title": "This week is skipped.",
@@ -1125,7 +1125,7 @@
         "delivery_calendar": "Delivery calendar",
         "coming_up": "Coming up",
         "subscription_inactive": "Your subscription is {status} — no boxes are scheduled.",
-        "no_later_weeks": "HelloFresh hasn't published later weeks yet.",
+        "no_later_weeks": "{brand} hasn't published later weeks yet.",
         "recent_deliveries": "Recent deliveries",
         "history_weeks": {
           "one": "{count} week of history",
@@ -1339,7 +1339,7 @@
         "save_failed": "Couldn't save your box: {error}",
         "saved": "Your box is saved.",
         "unsaved_changes": "Unsaved changes",
-        "downsized_title": "HelloFresh downsized this box to fit your plan.",
+        "downsized_title": "{brand} downsized this box to fit your plan.",
         "downsized_body": "Fewer items were saved than you picked — check the saved box below.",
         "kind_label": "Meals or extras",
         "meals": "Meals",
@@ -1348,7 +1348,7 @@
         "selected_of_required": "{selected} of {required} meals",
         "deadline_passed": "The deadline passed — these changes can't be saved",
         "min_note": "Choose at least {min} meals to save",
-        "resized_note": "Box resized to {selected} meals for this week (plan: {required}) — HelloFresh reprices it",
+        "resized_note": "Box resized to {selected} meals for this week (plan: {required}) — {brand} reprices it",
         "saved_note": "Saved · edit until the deadline",
         "estimated_total": "Estimated total",
         "updating_price": "Updating price…",
@@ -1364,9 +1364,9 @@
         "extras_change": "Extras (this change)",
         "updating": "Updating…",
         "price": "Price",
-        "estimate_note": "An estimate — HelloFresh calculates the final price when it charges the box.",
-        "min_notice": "Choose at least {min} meals — HelloFresh has no smaller box.",
-        "resized_notice": "This week's box is resized to {meals} (your plan has {required}). HelloFresh reprices it; your plan itself doesn't change.",
+        "estimate_note": "An estimate — {brand} calculates the final price when it charges the box.",
+        "min_notice": "Choose at least {min} meals — {brand} has no smaller box.",
+        "resized_notice": "This week's box is resized to {meals} (your plan has {required}). {brand} reprices it; your plan itself doesn't change.",
         "unsaved_lower": "unsaved changes",
         "keep_editing": "Keep editing"
       },
@@ -1493,7 +1493,7 @@
         "presets_loading": "Loading presets…",
         "presets_none": "No presets available.",
         "yours": "Yours",
-        "presets_note": "What each preset means — HelloFresh uses yours to pick meals. Change it on hellofresh.com."
+        "presets_note": "What each preset means — {brand} uses yours to pick meals. Change it with {brand}."
       },
       "plan": {
         "options_loading": "Options load shortly…",
@@ -1540,8 +1540,8 @@
         "payload_ok": "As expected",
         "no_sensors": "Status sensors aren't available.",
         "card_updated": "Card updated {time}",
-        "refresh": "Refresh from HelloFresh",
-        "refreshed": "Refreshed from HelloFresh.",
+        "refresh": "Refresh from {brand}",
+        "refreshed": "Refreshed from {brand}.",
         "refresh_failed": "Refresh failed: {error}"
       },
       "spending": {
@@ -1557,8 +1557,8 @@
         "monthly": "Monthly box cost",
         "peak": "Peak {price}",
         "chart_label": {
-          "one": "Monthly HelloFresh box cost over the last month",
-          "other": "Monthly HelloFresh box cost over the last {count} months"
+          "one": "Monthly {brand} box cost over the last month",
+          "other": "Monthly {brand} box cost over the last {count} months"
         },
         "by_month": "By month",
         "recent_boxes": "Recent boxes",

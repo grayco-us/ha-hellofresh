@@ -37,7 +37,11 @@ written here with the website's `/gw/` prefix. What nobody has observed yet is l
 ### Markets
 
 Each market has its own website, and the API lives under it at `/gw/`. Requests name the market's
-ISO country code and a locale.
+country/business-unit code and a locale. EveryPlate US shares this gateway shape but uses
+`ER` (a business unit, not an ISO country) with `en-US` on `https://www.everyplate.com`.
+This routing comes from the contributed local integration; the contributor confirmed sign-in,
+menus, meal saves, delivery details and recipe details. Its cookbook and food-profile editor
+are unavailable. See [EveryPlate US](everyplate-us.md) for the supported scope.
 
 | Market | Website | `country` | Default `locale` | Currency |
 | --- | --- | --- | --- | --- |

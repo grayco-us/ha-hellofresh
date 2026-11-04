@@ -122,7 +122,7 @@ export class OverviewView {
         <strong>${ht("overview.skipped_title")}</strong> ${ht(L.canSkip(week) ? "overview.skipped_body_unskip" : "overview.skipped_body")}</div></div>`);
     } else if (L.isAutoPicked(week)) {
       blocks.push(`<div class="hf-notice tone-warn">${icon("mdi:auto-fix")}<div class="hf-noticebody">
-        <strong>${ht("week.autopicked_title")}</strong> ${ht("overview.autopicked_body")}</div></div>`);
+        <strong>${card.ht("week.autopicked_title")}</strong> ${ht("overview.autopicked_body")}</div></div>`);
     }
     if (card.box.dirty(week)) {
       blocks.push(`<div class="hf-notice tone-info">${icon("mdi:content-save-alert-outline")}<div class="hf-noticebody">
@@ -186,7 +186,7 @@ export class OverviewView {
 
     return `<section class="hf-hero" aria-label="${esc(eyebrow)}">
         <div class="hf-heromain">
-          <div class="hf-actions"><span class="hf-eyebrow">${esc(eyebrow)}</span>${UI.statePill(week, state)}</div>
+          <div class="hf-actions"><span class="hf-eyebrow">${esc(eyebrow)}</span>${UI.statePill(week, state, card.brandParams)}</div>
           <div class="hf-herodate">${esc(L.fmtLongDate(week.delivery_date))}</div>
           ${meta.length ? `<div class="hf-herometa">${meta.join("")}</div>` : ""}
           ${blocks.join("")}
@@ -337,7 +337,7 @@ export class OverviewView {
       const message =
         status && status !== "active"
           ? ht("overview.subscription_inactive", { status: L.statusLabel(status).toLowerCase() })
-          : ht("overview.no_later_weeks");
+          : card.ht("overview.no_later_weeks");
       return `${head}<div class="hf-empty">${icon("mdi:calendar-blank-outline")}${message}</div>`;
     }
     return `${head}<div class="hf-weekcards">${upcoming.map((w) => this._weekCard(w)).join("")}</div>`;
@@ -374,7 +374,7 @@ export class OverviewView {
         <div class="hf-weekcardhead">
           <div><div class="hf-wdate">${esc(L.fmtDate(week.delivery_date))}${L.isHolidayShifted(week) ? ` <span title="${esc(week.holiday_message || t("week.holiday_change"))}">${icon("mdi:calendar-star")}</span>` : ""}</div>
             <div class="hf-wsub">${esc([L.relativeWeek(week), week.display_name].filter(Boolean).join(" · "))}</div></div>
-          ${UI.statePill(week, state)}
+          ${UI.statePill(week, state, card.brandParams)}
         </div>
         ${skipped ? `<div class="hf-thumbs empty">${ht("week.nothing_ships")}</div>` : UI.thumbRow(meals, { max: 4 })}
         ${benefit ? `<div>${pill(benefit.label, "ok", "mdi:ticket-percent-outline")}</div>` : ""}
@@ -509,7 +509,7 @@ export class OverviewView {
       const meals = card.box.displayMeals(week).size || Number(week.meals_selected) || 0;
       const required = Number(week.meals_required) || 0;
       if (state === "needs") {
-        parts.push(L.isAutoPicked(week) ? ht("week.review_picks") : required ? ht("week.pick_n_meals", { count: required }) : ht("week.pick_your_meals"));
+        parts.push(L.isAutoPicked(week) ? card.ht("week.review_picks") : required ? ht("week.pick_n_meals", { count: required }) : ht("week.pick_your_meals"));
       } else if (meals) {
         parts.push(`<strong>${ht("meals.count", { count: meals })}</strong>${required && required !== meals ? ` <span class="hf-muted">(${ht("week.plan_n", { count: required })})</span>` : ""}`);
       }

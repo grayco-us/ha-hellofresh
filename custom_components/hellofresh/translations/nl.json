@@ -917,7 +917,7 @@
         "account": "Account"
       },
       "card": {
-        "sections": "HelloFresh-onderdelen",
+        "sections": "{brand}-onderdelen",
         "sidebar": "Zijbalk",
         "open_sidebar": "Zijbalk openen",
         "plan_size": {
@@ -937,10 +937,10 @@
       "banner": {
         "refresh_failed": "Vernieuwen mislukt: {error}",
         "payment_card": "betaalkaart",
-        "card_expired": "Je kaart ({card}) is verlopen. Werk hem bij bij HelloFresh, anders wordt je volgende box misschien niet verstuurd.",
-        "card_expired_date": "Je kaart ({card}) is verlopen ({date}). Werk hem bij bij HelloFresh, anders wordt je volgende box misschien niet verstuurd.",
-        "card_expiring": "Je kaart ({card}) verloopt binnenkort. Werk hem bij bij HelloFresh voordat je volgende box wordt afgeschreven.",
-        "card_expiring_date": "Je kaart ({card}) verloopt binnenkort ({date}). Werk hem bij bij HelloFresh voordat je volgende box wordt afgeschreven.",
+        "card_expired": "Je kaart ({card}) is verlopen. Werk hem bij bij {brand}, anders wordt je volgende box misschien niet verstuurd.",
+        "card_expired_date": "Je kaart ({card}) is verlopen ({date}). Werk hem bij bij {brand}, anders wordt je volgende box misschien niet verstuurd.",
+        "card_expiring": "Je kaart ({card}) verloopt binnenkort. Werk hem bij bij {brand} voordat je volgende box wordt afgeschreven.",
+        "card_expiring_date": "Je kaart ({card}) verloopt binnenkort ({date}). Werk hem bij bij {brand} voordat je volgende box wordt afgeschreven.",
         "holiday_date": "Nieuwe bezorgdatum: {date}."
       },
       "state": {
@@ -955,7 +955,7 @@
         "preselected": {
           "label": "Vooraf gekozen",
           "short": "Vooraf gekozen",
-          "hint": "HelloFresh heeft deze maaltijden voor je gekozen — bekijk en pas ze aan vóór de deadline."
+          "hint": "{brand} heeft deze maaltijden voor je gekozen — bekijk en pas ze aan vóór de deadline."
         },
         "shipping": {
           "label": "Onderweg",
@@ -1023,7 +1023,7 @@
         "holiday_change": "Gewijzigde bezorging vanwege een feestdag",
         "holiday_schedule": "Feestdagschema",
         "make_changes_by": "Wijzigen kan tot {date}",
-        "autopicked_title": "HelloFresh heeft deze maaltijden voor je gekozen.",
+        "autopicked_title": "{brand} heeft deze maaltijden voor je gekozen.",
         "unskip_this_week": "Deze week toch een box ontvangen",
         "review": "Bekijken",
         "edit": "Wijzigen",
@@ -1034,7 +1034,7 @@
         "nothing_ships": "Deze week wordt er niets bezorgd.",
         "edit_by": "Wijzigen tot {date}",
         "no_box": "Geen box deze week",
-        "review_picks": "Bekijk de keuzes van HelloFresh",
+        "review_picks": "Bekijk de keuzes van {brand}",
         "pick_n_meals": {
           "one": "Kies {count} maaltijd",
           "other": "Kies {count} maaltijden"
@@ -1044,7 +1044,7 @@
         "next": "Volgende",
         "earlier_weeks": "Eerdere weken",
         "later_weeks": "Latere weken",
-        "preselected_title": "HelloFresh heeft de maaltijden van deze week gekozen.",
+        "preselected_title": "{brand} heeft de maaltijden van deze week gekozen.",
         "pantry": "Boodschappenlijst",
         "unskip_week": "Box toch ontvangen",
         "skipped_title": "Deze week is gepauzeerd.",
@@ -1125,7 +1125,7 @@
         "delivery_calendar": "Bezorgkalender",
         "coming_up": "Binnenkort",
         "subscription_inactive": "Je abonnement is {status} — er zijn geen boxen gepland.",
-        "no_later_weeks": "HelloFresh heeft latere weken nog niet gepubliceerd.",
+        "no_later_weeks": "{brand} heeft latere weken nog niet gepubliceerd.",
         "recent_deliveries": "Recente bezorgingen",
         "history_weeks": {
           "one": "{count} week geschiedenis",
@@ -1339,7 +1339,7 @@
         "save_failed": "Je box kon niet worden opgeslagen: {error}",
         "saved": "Je box is opgeslagen.",
         "unsaved_changes": "Niet-opgeslagen wijzigingen",
-        "downsized_title": "HelloFresh heeft deze box verkleind zodat hij bij je abonnement past.",
+        "downsized_title": "{brand} heeft deze box verkleind zodat hij bij je abonnement past.",
         "downsized_body": "Er zijn minder artikelen opgeslagen dan je koos — bekijk de opgeslagen box hieronder.",
         "kind_label": "Maaltijden of extra's",
         "meals": "Maaltijden",
@@ -1348,7 +1348,7 @@
         "selected_of_required": "{selected} van {required} maaltijden",
         "deadline_passed": "De deadline is verstreken — deze wijzigingen kunnen niet worden opgeslagen",
         "min_note": "Kies minstens {min} maaltijden om op te slaan",
-        "resized_note": "Box deze week aangepast naar {selected} maaltijden (abonnement: {required}) — HelloFresh berekent de prijs opnieuw",
+        "resized_note": "Box deze week aangepast naar {selected} maaltijden (abonnement: {required}) — {brand} berekent de prijs opnieuw",
         "saved_note": "Opgeslagen · wijzigen kan tot de deadline",
         "estimated_total": "Geschat totaal",
         "updating_price": "Prijs bijwerken …",
@@ -1364,9 +1364,9 @@
         "extras_change": "Extra's (deze wijziging)",
         "updating": "Bijwerken …",
         "price": "Prijs",
-        "estimate_note": "Een schatting — HelloFresh berekent de definitieve prijs bij het afschrijven.",
-        "min_notice": "Kies minstens {min} maaltijden — kleiner kan de box van HelloFresh niet.",
-        "resized_notice": "De box van deze week is aangepast naar {meals} (je abonnement heeft er {required}). HelloFresh berekent de prijs opnieuw; je abonnement zelf verandert niet.",
+        "estimate_note": "Een schatting — {brand} berekent de definitieve prijs bij het afschrijven.",
+        "min_notice": "Kies minstens {min} maaltijden — kleiner kan de box van {brand} niet.",
+        "resized_notice": "De box van deze week is aangepast naar {meals} (je abonnement heeft er {required}). {brand} berekent de prijs opnieuw; je abonnement zelf verandert niet.",
         "unsaved_lower": "niet-opgeslagen wijzigingen",
         "keep_editing": "Verder bewerken"
       },
@@ -1493,7 +1493,7 @@
         "presets_loading": "Menuvoorkeuren laden …",
         "presets_none": "Geen menuvoorkeuren beschikbaar.",
         "yours": "Jouw keuze",
-        "presets_note": "Wat elke voorkeur betekent — HelloFresh gebruikt de jouwe om maaltijden te kiezen. Je wijzigt hem bij HelloFresh."
+        "presets_note": "Wat elke voorkeur betekent — {brand} gebruikt de jouwe om maaltijden te kiezen. Je wijzigt hem bij {brand}."
       },
       "plan": {
         "options_loading": "Opties worden zo geladen …",
@@ -1540,8 +1540,8 @@
         "payload_ok": "Zoals verwacht",
         "no_sensors": "De statussensoren zijn niet beschikbaar.",
         "card_updated": "Kaart bijgewerkt {time}",
-        "refresh": "Vernieuwen vanuit HelloFresh",
-        "refreshed": "Vernieuwd vanuit HelloFresh.",
+        "refresh": "Vernieuwen vanuit {brand}",
+        "refreshed": "Vernieuwd vanuit {brand}.",
         "refresh_failed": "Vernieuwen mislukt: {error}"
       },
       "spending": {
@@ -1557,8 +1557,8 @@
         "monthly": "Kosten per maand",
         "peak": "Hoogste {price}",
         "chart_label": {
-          "one": "Maandelijkse HelloFresh-kosten van de afgelopen maand",
-          "other": "Maandelijkse HelloFresh-kosten van de afgelopen {count} maanden"
+          "one": "Maandelijkse {brand}-kosten van de afgelopen maand",
+          "other": "Maandelijkse {brand}-kosten van de afgelopen {count} maanden"
         },
         "by_month": "Per maand",
         "recent_boxes": "Recente boxen",
