@@ -282,8 +282,10 @@ day, for the box you're eating now and each one after it.
   **appetizer** and a **dessert** from that week's Market items, and a day's meal can start at its
   own time.
 - **Previous deliveries** — the day picker also offers meals and purchased Market items from
-  earlier deliveries, grouped by delivery date with the newest first. These appear automatically
-  from the account’s loaded history; skipped, cancelled and undelivered boxes are excluded.
+  deliveries from the 14 days before the day being planned, grouped by delivery date with the
+  newest first. These appear automatically from the account’s loaded history; older, skipped,
+  cancelled and undelivered boxes are excluded. Saved plans are retained when their source
+  delivery becomes too old to offer for new choices.
   Picking one keeps its original box reference and uses that box’s remaining quantity. Existing
   plans still reserve their quantities across weeks; they do not record whether a meal was cooked.
 - **Breakfast and lunch** show in a week only when you bought Market breakfast or lunch items for

@@ -1553,14 +1553,17 @@ export function planItems(week) {
   return items;
 }
 
-// The displayed box plus earlier deliveries that can supply a later planned meal.
+// The displayed box plus deliveries from the 14 days before the planned meal.
 // Keep each box separate even when the same recipe was ordered in more than one week.
 export function planPickerWeeks(weeks, week, day, now = new Date()) {
   if (!week) return [];
   const today = isoDay(now);
+  const earliest = parseLocalDate(day);
+  earliest.setDate(earliest.getDate() - 14);
+  const cutoff = isoDay(earliest);
   const seen = new Set([week.week_id]);
   const earlier = (weeks || [])
-    .filter((w) => w.delivery_date && w.delivery_date < week.delivery_date &&
+    .filter((w) => w.delivery_date && w.delivery_date >= cutoff && w.delivery_date < week.delivery_date &&
       w.delivery_date <= day && w.delivery_date <= today && !isSkipped(w) && isDelivered(w, now))
     .sort((a, b) => b.delivery_date.localeCompare(a.delivery_date))
     .filter((w) => {
