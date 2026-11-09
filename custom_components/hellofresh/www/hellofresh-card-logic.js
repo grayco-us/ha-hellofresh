@@ -1553,6 +1553,24 @@ export function planItems(week) {
   return items;
 }
 
+// The displayed box plus earlier deliveries that can supply a later planned meal.
+// Keep each box separate even when the same recipe was ordered in more than one week.
+export function planPickerWeeks(weeks, week, day, now = new Date()) {
+  if (!week) return [];
+  const today = isoDay(now);
+  const seen = new Set([week.week_id]);
+  const earlier = (weeks || [])
+    .filter((w) => w.delivery_date && w.delivery_date < week.delivery_date &&
+      w.delivery_date <= day && w.delivery_date <= today && !isSkipped(w) && isDelivered(w, now))
+    .sort((a, b) => b.delivery_date.localeCompare(a.delivery_date))
+    .filter((w) => {
+      if (seen.has(w.week_id) || !planItems(w).length) return false;
+      seen.add(w.week_id);
+      return true;
+    });
+  return [week, ...earlier];
+}
+
 // The meal and course an item is offered in first.
 export function suggestedSlot(item) {
   if (item && item.kind === "market" && PLAN_GROUP_SLOTS[item.group]) return PLAN_GROUP_SLOTS[item.group];

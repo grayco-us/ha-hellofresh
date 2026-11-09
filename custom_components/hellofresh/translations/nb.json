@@ -1762,6 +1762,8 @@
         "sheet_title": "{meal} · {date}",
         "optional": "{course} (valgfritt)",
         "more_from_week": "Mer fra denne uken",
+        "previous_deliveries": "Tidligere leveringer",
+        "delivery_from": "Levert {date}",
         "start": "Starter kl.",
         "clear": "Fjern",
         "save": "Lagre",

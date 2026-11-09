@@ -1010,6 +1010,43 @@ await check("week tab: a tray meal goes on the day picked, in one set_planned_me
   await page.close();
 });
 
+await check("week tab: an earlier delivery is picked automatically and keeps its box identity", async () => {
+  const page = await openWeek({ brand: "everyplate" });
+  const source = await page.evaluate(() => {
+    const card = window.__card;
+    const current = card._views.week._week();
+    const old = window.__fx.weeks.filter((w) => w.delivery_date < current.delivery_date && !w.is_skipped)
+      .sort((a, b) => b.delivery_date.localeCompare(a.delivery_date))[0];
+    // The same recipe bought in two boxes must remain two independent choices.
+    const recipe = current.recipes.find((r) => r.is_selected && r.recipe_id);
+    Object.assign(old, { status: "DELIVERED", order: null, market_items: [], recipes: [
+      { ...recipe, name: "Carried-over dinner", is_selected: true, selected_quantity: 1 },
+    ] });
+    const loaded = card.weeks.find((w) => w.week_id === old.week_id);
+    if (loaded !== old) Object.assign(loaded, old);
+    return { id: recipe.recipe_id, old: old.week_id, current: current.week_id };
+  });
+  await click(page, line("2026-10-17"), 300);
+  const previous = `[data-action="pick"][data-course="main"][data-id="${source.id}"][data-week-id="${source.old}"]`;
+  const current = `[data-action="pick"][data-course="main"][data-id="${source.id}"][data-week-id="${source.current}"]`;
+  assert(await q(page, `.hf-planprevious ${previous}`), "prior box appears without an availability flag");
+  assert(await q(page, current), "current box retains its separate recipe option");
+  assert(/Delivered/.test(await text(page, ".hf-planprevious summary")), "original delivery date is labelled");
+  await click(page, previous, 200);
+  assert(await page.evaluate((selector) => window.__card.shadowRoot.querySelector(selector).getAttribute("aria-pressed") === "true", previous), "earlier box selected");
+  assert(await page.evaluate((selector) => window.__card.shadowRoot.querySelector(selector).getAttribute("aria-pressed") === "false", current), "same recipe in current box stays unselected");
+  await click(page, '[data-action="save-slot"]', 600);
+  const writes = await calls(page, "hellofresh.set_planned_meal");
+  assert(writes.length === 1, `one plan write: ${writes.length}`);
+  assert(writes[0].data.date === "2026-10-17" && writes[0].data.week_id === source.old && writes[0].data.recipe_id === source.id, JSON.stringify(writes[0].data));
+  assert(/Carried-over dinner/.test(await text(page, line("2026-10-17"))), "later day shows the earlier meal");
+  await click(page, line("2026-10-17"), 200);
+  assert(await page.evaluate((selector) => window.__card.shadowRoot.querySelector(selector).getAttribute("aria-pressed") === "true", previous), "reopening preserves the source and permits editing this use");
+  const orders = (await calls(page)).filter((call) => ["select_meals", "select_market_items"].includes(call.service));
+  assert(orders.length === 0, "planning does not change the box order");
+  await page.close();
+});
+
 await check("week tab: a note with its own start time saves in one call", async () => {
   const page = await openWeek();
   await click(page, line("2026-10-17"), 300);

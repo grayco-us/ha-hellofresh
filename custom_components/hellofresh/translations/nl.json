@@ -1762,6 +1762,8 @@
         "sheet_title": "{meal} · {date}",
         "optional": "{course} (optioneel)",
         "more_from_week": "Meer uit deze week",
+        "previous_deliveries": "Eerdere leveringen",
+        "delivery_from": "Bezorgd op {date}",
         "start": "Begint om",
         "clear": "Wissen",
         "save": "Opslaan",

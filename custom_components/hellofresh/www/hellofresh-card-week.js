@@ -4,8 +4,8 @@
  * When each meal in a box gets eaten. The tab shows the seven days a box covers (from its
  * delivery day), each with its planned dinner — and breakfast and lunch for weeks with Market
  * items for them — and a tray of what isn't planned yet. A day's meal opens a sheet to pick a
- * box meal, a Market item bought that week, or a note ("Pizza night"), and to change when it
- * starts. Dinner can add an appetizer and a dessert.
+ * box meal, a purchased Market item, an earlier delivery’s meal, or a note ("Pizza night").
+ * The sheet also changes its start time. Dinner can add an appetizer and a dessert.
  *
  * The plan lives in the integration (get_meal_plan / set_planned_meal / clear_planned_meal),
  * which also turns it into the Meals calendar and today's-meal sensors; nothing here writes to
@@ -332,6 +332,7 @@ export class WeekView {
       planned: Boolean(slot),
       start: slot && slot.start ? L.hhmm(slot.start) : defaults.start || "",
       moreOpen: false,
+      previousOpen: null,
     };
     const title = t("weekplan.sheet_title", { meal: t(`weekplan.meal.${meal}`), date: L.fmtLongDate(day) });
     card.openSheet({
@@ -377,7 +378,7 @@ export class WeekView {
         ${state.week.display_name ? `<div class="hf-sheetsub">${esc(state.week.display_name)}</div>` : ""}</div>
         <button class="hf-iconbtn" data-close-sheet aria-label="${ht("common.close")}">${icon("mdi:close")}</button></div>
       <div class="hf-sheetbody">
-        ${sections.join("")}${more}
+        ${sections.join("")}${more}${this._previousOptions(state, plan)}
         <label class="hf-planfield"><span class="hf-h3">${ht("weekplan.start")}</span>
           <input class="hf-planinput" type="time" data-start-input value="${esc(state.start)}"></label>
       </div>
@@ -389,20 +390,46 @@ export class WeekView {
       </div>`;
   }
 
+  _pickerWeeks(state) {
+    return L.planPickerWeeks(this.card.weeks, state.week, state.day);
+  }
+
+  _previousOptions(state, plan) {
+    const weeks = this._pickerWeeks(state).slice(1);
+    if (!weeks.length) return "";
+    const courses = this._courses(state.meal);
+    const groups = weeks.map((week, index) => {
+      const items = L.planItems(week);
+      const selected = courses.some((course) => state.sel[course]?.week_id === week.week_id);
+      const open = state.previousOpen ? state.previousOpen.has(week.week_id) : index === 0 || selected;
+      const rows = courses.map((course) => {
+        const fits = items.filter((item) => L.itemFits(item, state.meal, course) ||
+          (course === "main" && !courses.some((c) => L.itemFits(item, state.meal, c))));
+        if (!fits.length) return "";
+        return `<div class="hf-planopts"><h4 class="hf-h3">${ht(`weekplan.course.${course}`)}</h4>
+          ${fits.map((item) => this._option(state, course, item, plan)).join("")}</div>`;
+      }).join("");
+      const date = L.fmtDate(week.delivery_date, { month: "short", day: "numeric", year: "numeric" });
+      return `<details class="hf-planmore hf-planfrom" data-week-id="${esc(week.week_id)}" ${open ? "open" : ""}>
+        <summary>${ht("weekplan.delivery_from", { date })}</summary>${rows}</details>`;
+    }).join("");
+    return `<section class="hf-planprevious"><h3 class="hf-h3">${ht("weekplan.previous_deliveries")}</h3>${groups}</section>`;
+  }
+
   _option(state, course, item, plan) {
     const on = L.sameItem(state.sel[course], item);
     const uses = L.itemUses(plan, item, { day: state.day, meal: state.meal, course });
     const left = item.quantity - uses.count;
     const disabled = !on && left <= 0;
     const status = disabled
-      ? t("weekplan.planned_on", { days: uses.days.map((d) => L.fmtWeekday(d)).join(", ") })
+      ? t("weekplan.planned_on", { days: uses.days.map((d) => item.week_id === state.week.week_id ? L.fmtWeekday(d) : shortDay(d)).join(", ") })
       : item.quantity > 1 || uses.count
         ? t("weekplan.left", { count: Math.max(0, on ? left - 1 : left) })
         : "";
     const src = L.resizedImage(item.image_url, 120);
     const sub = this._itemSub(item);
     return `<button class="hf-optrow${on ? " on" : ""}" data-action="pick" data-course="${course}" data-kind="${item.kind}"
-        data-id="${esc(item.id)}" aria-pressed="${on}" ${disabled ? "disabled" : ""}>
+        data-id="${esc(item.id)}" data-week-id="${esc(item.week_id)}" aria-pressed="${on}" ${disabled ? "disabled" : ""}>
         <span class="hf-radio"></span>
         ${src ? `<img class="hf-optimg dish" loading="lazy" src="${esc(src)}" alt="">` : `<span class="hf-optimg">${icon("mdi:silverware-variant")}</span>`}
         <span class="hf-opttext"><span class="hf-optname">${esc(item.name)}</span>${sub ? `<span class="hf-optsub">${esc(sub)}</span>` : ""}</span>
@@ -435,8 +462,9 @@ export class WeekView {
     if (note && state.sel.main && state.sel.main.kind === "note") state.sel.main.text = note.value;
     const start = root.querySelector("[data-start-input]");
     if (start) state.start = start.value;
-    const more = root.querySelector(".hf-planmore");
+    const more = root.querySelector(".hf-planmore:not(.hf-planfrom)");
     if (more) state.moreOpen = more.open;
+    state.previousOpen = new Set([...root.querySelectorAll(".hf-planfrom[open]")].map((el) => el.getAttribute("data-week-id")));
   }
 
   _onSlotClick(state, el) {
@@ -459,8 +487,9 @@ export class WeekView {
     }
     if (action === "pick-none") state.sel[course] = null;
     else if (action === "pick") {
-      const item = L.planItems(state.week).find(
-        (i) => i.kind === el.getAttribute("data-kind") && i.id === el.getAttribute("data-id")
+      const item = this._pickerWeeks(state).flatMap((week) => L.planItems(week)).find(
+        (i) => i.kind === el.getAttribute("data-kind") && i.id === el.getAttribute("data-id") &&
+          i.week_id === el.getAttribute("data-week-id")
       );
       if (!item) return;
       // Picking the chosen main again leaves it chosen; an optional course toggles off.

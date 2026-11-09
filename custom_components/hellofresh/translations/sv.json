@@ -1762,6 +1762,8 @@
         "sheet_title": "{meal} · {date}",
         "optional": "{course} (valfritt)",
         "more_from_week": "Mer från den här veckan",
+        "previous_deliveries": "Tidigare leveranser",
+        "delivery_from": "Levererat {date}",
         "start": "Börjar kl.",
         "clear": "Rensa",
         "save": "Spara",

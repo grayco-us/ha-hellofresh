@@ -701,6 +701,8 @@ export const EN = {
   "weekplan.sheet_title": "{meal} · {date}",
   "weekplan.optional": "{course} (optional)",
   "weekplan.more_from_week": "More from this week",
+  "weekplan.previous_deliveries": "Previous deliveries",
+  "weekplan.delivery_from": "Delivered {date}",
   "weekplan.start": "Starts at",
   "weekplan.clear": "Clear",
   "weekplan.save": "Save",

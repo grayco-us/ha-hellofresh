@@ -281,6 +281,11 @@ day, for the box you're eating now and each one after it.
   or **Something else** — a note such as "Leftovers" or "Pizza night". Dinner can add an
   **appetizer** and a **dessert** from that week's Market items, and a day's meal can start at its
   own time.
+- **Previous deliveries** — the day picker also offers meals and purchased Market items from
+  earlier deliveries, grouped by delivery date with the newest first. These appear automatically
+  from the account’s loaded history; skipped, cancelled and undelivered boxes are excluded.
+  Picking one keeps its original box reference and uses that box’s remaining quantity. Existing
+  plans still reserve their quantities across weeks; they do not record whether a meal was cooked.
 - **Breakfast and lunch** show in a week only when you bought Market breakfast or lunch items for
   it, or already planned one; otherwise each day offers a small **+ Breakfast** / **+ Lunch**. The
   integration's options can show them every week.

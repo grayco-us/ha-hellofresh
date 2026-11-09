@@ -6,6 +6,9 @@ Notable changes for each tagged release. Versions correspond to git tags and to 
 version heading and publishes it as the release's Highlights.
 
 ## Unreleased
+- **Plan meals from earlier deliveries.** The Week tab’s day picker automatically includes
+  earlier delivered boxes, grouped by delivery date. Meals and Market items retain their
+  original box reference and quantity limits when scheduled in a later week.
 - **EveryPlate US accounts** can use the shared integration with their own sign-in site,
   API business unit and USD fallback. Setup, devices, sidebar and card headings identify
   EveryPlate. The card omits its unsupported standalone Recipes/cookbook and food-preference
