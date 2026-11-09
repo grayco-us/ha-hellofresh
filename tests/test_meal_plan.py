@@ -322,3 +322,19 @@ async def test_tonights_dinner_sensor(hass) -> None:
     sensor._meal = "lunch"
     assert sensor.native_value == "None"
     assert sensor.extra_state_attributes == {"date": "2026-10-14", "tomorrow": None}
+
+
+async def test_prior_delivery_can_be_planned_later_with_independent_box_quantities(hass) -> None:
+    earlier = _week(date(2026, 10, 5), "2026-W41")
+    current = _week(date(2026, 10, 12), "2026-W42")
+    plan = _plan(hass, weeks=[earlier, current])
+    await plan.async_set(TODAY, recipe_id="shrimp", week_id="2026-W41")
+    assert plan.slot(TODAY, "dinner")["main"]["week_id"] == "2026-W41"
+    with pytest.raises(HomeAssistantError, match="already planned"):
+        await plan.async_set(TODAY + timedelta(days=1), recipe_id="shrimp", week_id="2026-W41")
+    # The same recipe from this week's box has its own quantity; replacing the older
+    # assignment with itself also must not consume it twice.
+    await plan.async_set(TODAY, recipe_id="shrimp", week_id="2026-W41")
+    await plan.async_set(TODAY + timedelta(days=1), recipe_id="shrimp", week_id="2026-W42")
+    assert plan.slot(TODAY + timedelta(days=1), "dinner")["main"]["week_id"] == "2026-W42"
+    assert plan.coordinator.client.calls == []

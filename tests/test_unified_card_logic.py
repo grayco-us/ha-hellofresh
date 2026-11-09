@@ -981,3 +981,43 @@ def test_payment_brands_use_their_names_not_their_codes() -> None:
         "Credit card",
         "Jcb",
     ]
+
+
+def test_meal_picker_includes_earlier_deliveries_newest_first_without_merging_boxes() -> None:
+    result = _run(
+        PLAN_WEEK
+        + """
+      const old = { ...box, week_id: "old", delivery_date: "2026-09-28", status: "DELIVERED" };
+      const recent = { ...box, week_id: "recent", delivery_date: "2026-10-05", status: "DELIVERED" };
+      const sources = L.planPickerWeeks([old, box, recent, recent], box, "2026-10-16", wednesday);
+      const meals = sources.flatMap((week) => L.planItems(week)).filter((i) => i.id === "a");
+      return [sources.map((w) => w.week_id), meals.map((i) => i.week_id), L.sameItem(meals[0], meals[1])];
+    """
+    )
+    assert result == [["2026-W42", "recent", "old"], ["2026-W42", "recent", "old"], False]
+
+
+def test_meal_picker_excludes_unreceived_and_unbought_earlier_boxes() -> None:
+    result = _run(
+        PLAN_WEEK
+        + """
+      const previous = { ...box, delivery_date: "2026-10-05" };
+      const later = { ...box, week_id: "later", delivery_date: "2026-10-19" };
+      const candidates = [
+        { ...previous, week_id: "skipped", is_skipped: true, status: "DELIVERED" },
+        { ...previous, week_id: "paused", status: "PAUSED" },
+        { ...previous, week_id: "cancelled", status: "CANCELLED" },
+        { ...previous, week_id: "late", order: { tracking_status: "delayed" } },
+        { ...previous, week_id: "unselected", recipes: [], market_items: [] },
+        { ...previous, week_id: "undated", delivery_date: null },
+        { ...later, status: "DELIVERED" },
+        { ...previous, week_id: "received", status: "DELIVERED" },
+      ];
+      return [
+        L.planPickerWeeks(candidates, box, "2026-10-16", wednesday).map((w) => w.week_id),
+        L.planPickerWeeks(candidates, later, "2026-10-04", wednesday).map((w) => w.week_id),
+        L.planPickerWeeks(candidates, null, "2026-10-16", wednesday),
+      ];
+    """
+    )
+    assert result == [["2026-W42", "received"], ["later"], []]

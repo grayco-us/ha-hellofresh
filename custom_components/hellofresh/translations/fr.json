@@ -1762,6 +1762,8 @@
         "sheet_title": "{meal} · {date}",
         "optional": "{course} (facultatif)",
         "more_from_week": "Autres articles de cette semaine",
+        "previous_deliveries": "Livraisons précédentes",
+        "delivery_from": "Livré le {date}",
         "start": "Commence à",
         "clear": "Effacer",
         "save": "Enregistrer",
