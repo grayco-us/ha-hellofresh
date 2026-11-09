@@ -1042,6 +1042,16 @@ await check("week tab: an earlier delivery is picked automatically and keeps its
   assert(/Carried-over dinner/.test(await text(page, line("2026-10-17"))), "later day shows the earlier meal");
   await click(page, line("2026-10-17"), 200);
   assert(await page.evaluate((selector) => window.__card.shadowRoot.querySelector(selector).getAttribute("aria-pressed") === "true", previous), "reopening preserves the source and permits editing this use");
+  // A saved meal is retained when its source falls outside the new-choice window.
+  await click(page, '[data-close-sheet]', 100);
+  await page.evaluate((weekId) => {
+    window.__card.weeks.find((w) => w.week_id === weekId).delivery_date = "2026-09-28";
+  }, source.old);
+  await click(page, line("2026-10-17"), 200);
+  assert(!(await q(page, previous)), "older than two weeks is no longer offered");
+  await click(page, '[data-action="save-slot"]', 200);
+  assert((await calls(page, "hellofresh.set_planned_meal")).length === 1, "unchanged saved meal is not rewritten");
+  assert(/Carried-over dinner/.test(await text(page, line("2026-10-17"))), "existing plan survives the cutoff");
   const orders = (await calls(page)).filter((call) => ["select_meals", "select_market_items"].includes(call.service));
   assert(orders.length === 0, "planning does not change the box order");
   await page.close();

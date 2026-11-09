@@ -987,7 +987,7 @@ def test_meal_picker_includes_earlier_deliveries_newest_first_without_merging_bo
     result = _run(
         PLAN_WEEK
         + """
-      const old = { ...box, week_id: "old", delivery_date: "2026-09-28", status: "DELIVERED" };
+      const old = { ...box, week_id: "old", delivery_date: "2026-10-02", status: "DELIVERED" };
       const recent = { ...box, week_id: "recent", delivery_date: "2026-10-05", status: "DELIVERED" };
       const sources = L.planPickerWeeks([old, box, recent, recent], box, "2026-10-16", wednesday);
       const meals = sources.flatMap((week) => L.planItems(week)).filter((i) => i.id === "a");
@@ -1021,3 +1021,21 @@ def test_meal_picker_excludes_unreceived_and_unbought_earlier_boxes() -> None:
     """
     )
     assert result == [["2026-W42", "received"], ["later"], []]
+
+
+def test_meal_picker_limits_prior_deliveries_to_fourteen_calendar_days_before_meal() -> None:
+    result = _run(
+        PLAN_WEEK
+        + """
+      const old = { ...box, week_id: "too-old", delivery_date: "2026-10-01", status: "DELIVERED" };
+      const boundary = { ...box, week_id: "boundary", delivery_date: "2026-10-02", status: "DELIVERED" };
+      const recent = { ...box, week_id: "recent", delivery_date: "2026-10-05", status: "DELIVERED" };
+      const weeks = [old, boundary, recent];
+      return [
+        L.planPickerWeeks(weeks, box, "2026-10-16", wednesday).map((w) => w.week_id),
+        L.planPickerWeeks(weeks, box, "2026-10-17", wednesday).map((w) => w.week_id),
+        L.planPickerWeeks(weeks, box, "2026-10-20", wednesday).map((w) => w.week_id),
+      ];
+    """
+    )
+    assert result == [["2026-W42", "recent", "boundary"], ["2026-W42", "recent"], ["2026-W42"]]
