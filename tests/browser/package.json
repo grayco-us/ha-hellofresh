@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
-    "puppeteer-core": "^23.11.1"
+    "puppeteer-core": "25.17.0"
+  },
+  "devDependencies": {
+    "eslint": "10.14.0"
   }
 }
